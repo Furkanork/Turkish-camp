@@ -108,6 +108,27 @@ td.tr{font-weight:600;color:var(--co)}
 .drill{border-top:1px solid var(--ln);margin-top:24px;padding-top:6px}
 .dq{margin:16px 0}.dq p{margin:0;font-size:17px}
 .dq .opts{margin-top:10px}
+.snd{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:18px}
+.snd .card{min-height:0}
+.snd h3{font-size:22px;color:var(--co);margin-bottom:6px}
+.snd p{margin:6px 0}
+.who{font-size:14px;color:var(--mut)}.who b{color:var(--ink)}
+.words{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pw{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 12px;border-radius:10px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font-size:16px}
+.pw:hover{border-color:var(--co)}
+.pw::before{content:"";width:0;height:0;border-left:8px solid var(--tq);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.pw small{color:var(--mut);font-size:13px}
+.syls{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0}
+.syl{min-width:64px;min-height:56px;padding:8px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font:600 24px/1 Literata,serif}
+.syl.right{border-color:var(--tq);background:color-mix(in srgb,var(--tq) 20%,var(--bg))}
+.syl.wrong{border-color:var(--rd);background:color-mix(in srgb,var(--rd) 16%,var(--bg))}
+.shl{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.shl li{background:var(--tile);border:1px solid var(--ln);border-radius:14px;padding:16px}
+.shl .s{font:500 20px/1.4 Literata,serif;margin:0 0 4px}
+.shl .row{margin-top:10px}
+.shl .btn{min-height:42px;padding:8px 14px}
+.heard{margin-top:10px;font-size:15px}.heard .ok{color:var(--tq);font-weight:600}.heard .no{color:var(--rd);font-weight:600;text-decoration:underline wavy}
+.redu td:first-child,.redu td:nth-child(2){font-weight:600}.redu td:nth-child(2){color:var(--co)}
 .prose{max-width:68ch}.prose h2{font-size:32px;margin-bottom:14px}.prose h3{font-size:21px;margin:26px 0 8px}
 .prose .note{font-size:14px;color:var(--mut)}
 .empty{text-align:center;padding:40px 10px}.empty h2{font-size:30px;color:var(--co);margin-bottom:10px}
@@ -128,7 +149,7 @@ footer{color:var(--mut);font-size:14px;border-top:1px solid var(--ln)}
 </div></div>
 <svg class="frieze" aria-hidden="true"><defs><pattern id="pt" width="44" height="44" patternUnits="userSpaceOnUse"><use href="#ros" x="4" y="4" width="36" height="36"/></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>
 </header>
-<nav><div class="wrap" id="nav"><a href="#calis">Çalış · Practise</a><a href="#dilbilgisi">Dilbilgisi · Grammar</a><a href="#test">Test · Quiz</a><a href="#liste">Liste · Library</a><a href="#neden">Neden 80/20?</a></div></nav>
+<nav><div class="wrap" id="nav"><a href="#calis">Çalış · Practise</a><a href="#dilbilgisi">Dilbilgisi · Grammar</a><a href="#telaffuz">Telaffuz · Accent</a><a href="#test">Test · Quiz</a><a href="#liste">Liste · Library</a><a href="#neden">Neden 80/20?</a></div></nav>
 
 <main>
 <section id="v-calis" class="band"><div class="wrap">
@@ -151,6 +172,12 @@ footer{color:var(--mut);font-size:14px;border-top:1px solid var(--ln)}
 <section id="v-dilbilgisi" class="band" hidden><div class="wrap gram">
   <div class="toc" id="toc"></div>
   <div id="gBox"></div>
+</div></section>
+
+<section id="v-telaffuz" class="band" hidden><div class="wrap">
+  <div class="ctl"><div class="seg" id="tpSeg" role="group" aria-label="Section"></div><div class="seg" id="rateSeg" role="group" aria-label="Speed"></div></div>
+  <p class="hint" id="voiceNote" style="margin:0 0 16px"></p>
+  <div id="tBox"></div>
 </div></section>
 
 <section id="v-test" class="band" hidden><div class="wrap"><div class="ctl"><div class="seg" id="lvSeg2" role="group" aria-label="Level"></div><div class="seg" id="qmSeg" role="group" aria-label="Answer mode"></div></div><div class="chips" id="qChips"></div><div id="quizBox"></div></div></section>
@@ -802,7 +829,7 @@ const $=id=>document.getElementById(id);
 const exHTML=(ex,blank)=>esc(ex).replace(/\{(.+?)\}/,(_,w)=>blank?'<mark>_____</mark>':'<mark>'+w+'</mark>');
 const dots=id=>{const p=st.p[id];return p?'●'.repeat(p.box)+'○'.repeat(5-p.box):'new'};
 let voice=null;const canSpeak='speechSynthesis' in window;
-const speak=t=>{try{const u=new SpeechSynthesisUtterance(t.replace(/[…{}]/g,' '));u.lang='tr-TR';if(voice)u.voice=voice;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+const speak=(t,rate)=>{try{const u=new SpeechSynthesisUtterance(t.replace(/[…{}]/g,' '));u.lang='tr-TR';u.rate=rate||+(st.rate||1);if(voice)u.voice=voice;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
 if(canSpeak){const pick=()=>{voice=speechSynthesis.getVoices().find(v=>/^tr/i.test(v.lang))||null};pick();speechSynthesis.onvoiceschanged=pick}
 $('foot').textContent+=` ${ITEMS.length} items and ${G.length} grammar topics across B1–C2.`;
 
@@ -954,13 +981,104 @@ function renderList(){
 }
 ['q','fCat','fLv'].forEach(id=>$(id).addEventListener('input',renderList));
 
+/* ---- telaffuz (accent) ---- */
+/* word chips: "spoken|shown|gloss" */
+const SND=[
+{t:'Vurgu · word stress',h:'Most words stress the last syllable. The exceptions are what give a gurbetçi accent away: place names, many adverbs, kinship words, question words, and the syllable before the negative -me/-ma, which takes the stress.',
+nl:'Dutch habits pull stress to the first syllable of every word.',en:'English puts stress anywhere and reduces the rest. Turkish stress is lighter: a slight rise in pitch, not extra loudness.',
+w:['masa|ma-SA|table','öğretmen|öğret-MEN|teacher','evde|ev-DE|at home','Ankara|AN-ka-ra','İstanbul|is-TAN-bul','Hollanda|hol-LAN-da','şimdi|ŞİM-di|now','yarın|YA-rın|tomorrow','nerede|NE-re-de|where','anne|AN-ne|mum','pencere|PEN-ce-re|window','gelmedi|GEL-me-di|didn\'t come','geliyorum|ge-li-YO-rum','ben de|BEN de|me too']},
+{t:'Hece ritmi · full vowels',h:'Turkish is syllable-timed: every syllable gets roughly the same length, and every vowel keeps its full sound. There is no "uh" (schwa) in Turkish.',
+nl:'Dutch reduces unstressed vowels ("de", "-en") to "uh". In Turkish the e in "gelecek" is three clear e\'s.',en:'English swallows unstressed vowels ("banana" = b\'NA-na). Tap one finger per syllable and give each the same beat.',
+w:['anlayamadım|an-la-ya-ma-dım','gelemiyorum|ge-le-mi-yo-rum','Çanakkale|Ça-nak-ka-le','Anadolu|A-na-do-lu','gelecek|ge-le-cek|future','memleket|mem-le-ket|homeland']},
+{t:'r · the tapped r',h:'The tongue tip taps once just behind the top teeth, like the quick "tt" in American "butter". At the end of a word or before a consonant, Istanbul speakers let it fade into a soft whisper: bir, var, kırk.',
+nl:'Never the Dutch throat r (huig-r), and not the "Gooise r" at the end of words either. This is the single most noticeable fix for Dutch-Turkish speakers.',en:'Not the English r with a curled tongue. Touch the ridge behind the teeth, once.',
+w:['araba|araba|car','kırk|kırk|forty','bir|bir|one','var|var|there is','doktor|doktor','Rize|Rize','terör|terör','ağır|ağır|heavy','rica ederim|rica ederim']},
+{t:'ı · the dotless i',h:'Say "i", then keep your lips flat and spread and pull your tongue back. No rounding, no "uh". Neither Dutch nor English has this vowel, so it usually turns into i or a schwa.',
+nl:'It is not the Dutch "u" in "kus", and not the "e" in "de".',en:'It is not the "u" in "but". Lips stay spread, as for "ee".',
+w:['kır|kır|countryside','kir|kir|dirt','kıl|kıl|hair','kil|kil|clay','ılık|ılık|lukewarm','ilik|ilik|bone marrow','balık|balık|fish','kapı|kapı|door','ışık|ışık|light']},
+{t:'ü ve ö · rounded front vowels',h:'Round your lips strongly as for u / o, but keep the tongue forward as for i / e. Keep them short and pure.',
+nl:'ü is close to Dutch "uu" in "minuut", but short. ö is close to Dutch "eu" in "neus", but shorter and tighter.',en:'English has no equivalent. Say "ee" and then round your lips without moving the tongue: that is ü.',
+w:['ol|ol|be','öl|öl|die','uç|uç|tip','üç|üç|three','kul|kul|servant','kül|kül|ash','gol|gol|goal','göl|göl|lake','gül|gül|rose']},
+{t:'Saf ünlüler · pure e and o',h:'Turkish vowels do not glide. o stays o, e stays e, from start to finish.',
+nl:'Dutch "ee" and "oo" drift into a diphthong ("eej", "oow"). Keep them flat and shorter.',en:'English "oh" becomes "o-u" and "ay" becomes "e-i". "Otel" is o-tel, not "oh-tel".',
+w:['otel|otel','okul|okul|school','Bodrum|Bodrum','ben|ben|I','ev|ev|house','ne|ne|what','söyle|söyle|say','telefon|telefon']},
+{t:'ğ · yumuşak g',h:'ğ is never a consonant you can hear. After a, ı, o, u it lengthens the vowel before it: dağ = "daa". Between e or i it is a light y: değil = "deyil", or simply "deel".',
+nl:'Never the Dutch g or ch sound. "Dağ" is not "dach". This is the second most noticeable Dutch-Turkish feature.',en:'Don\'t pronounce it as g. Just hold the vowel a little longer.',
+w:['dağ|dağ → daa|mountain','yağmur|yağmur → yaamur|rain','soğuk|soğuk → sooouk|cold','değil|değil → deel|not','öğretmen|öğretmen → ööretmen','eğer|eğer → eyer|if','iğne|iğne → iyne|needle','ağabey|ağabey → abi|big brother']},
+{t:'l · light and dark',h:'With e, i, ö, ü the l is light (tongue forward). With a, ı, o, u it is dark (tongue back). Many Arabic and European loanwords keep a light l even next to a, o, u.',
+nl:'Dutch speakers often use one dark l everywhere. "Gel" needs a bright, front l.',en:'English final l is always dark. In "gel", "bil" and "göl" keep the l bright, as in "leaf".',
+w:['gel|gel|come','bil|bil|know','göl|göl|lake','al|al|take','kol|kol|arm','kul|kul|servant','lâzım|lâzım|necessary','hal|hal|state','rol|rol|role','alkol|alkol']},
+{t:'â · inceltme işareti',h:'The circumflex after k, g or l makes the consonant soft, almost with a tiny y, and often marks a different word.',
+nl:'Dutch and English have no such contrast. Train your ear on the pairs.',en:'"Kâr" sounds close to "kyar"; "kar" is a plain hard k.',
+w:['kar|kar|snow','kâr|kâr|profit','hala|hala|aunt','hâlâ|hâlâ|still','kâğıt|kâğıt|paper','rüzgâr|rüzgâr|wind','dükkân|dükkân|shop','hikâye|hikâye|story']},
+{t:'Tonlama · sentence melody',h:'Statements fall at the end. Yes/no questions rise on the word just before mi, then drop. Question-word questions (ne, nerede, neden) fall.',
+nl:'Dutch questions rise at the very end of the sentence. Turkish rises before mi instead.',en:'English rises at the end of yes/no questions. In Turkish the peak is on the word before mi.',
+w:['Yarın geliyorum.|Yarın geliyorum. ↘','Geliyor musun?|Geli-YOR musun? ↗↘','Sen mi geldin?|SEN mi geldin? ↗↘','Nereye gidiyorsun?|NEreye gidiyorsun? ↘']}
+];
+const STR=[[['An','ka','ra'],0],[['İs','tan','bul'],1],[['Hol','lan','da'],1],[['Al','man','ya'],1],[['Av','ru','pa'],1],[['Tür','ki','ye'],0],[['Lon','dra'],0],[['şim','di'],0],[['ya','rın'],0],[['son','ra'],0],[['bel','ki'],0],[['ne','re','de'],0],[['na','sıl'],0],[['gel','me','di'],0],[['yap','ma'],0],[['ge','li','yo','rum'],2],[['ev','de'],1],[['ma','sa'],1],[['ta','mam'],1],[['pen','ce','re'],0],[['lo','kan','ta'],1],[['mer','ha','ba'],0],[['e','fen','dim'],1],[['an','ne'],0],[['tey','ze'],0],[['ço','cuk','lar'],2],[['öğ','ret','men'],2],[['git','me','ye','cek'],0]];
+const SH=[
+['Yavaş ve net · slow and clear',['Merhaba, nasılsınız?','Bugün hava çok güzel.','Hollanda\'da doğdum ama Türkiye\'de yaşamak istiyorum.','Annem öğretmen, babam ise doktor.']],
+['r, ğ, ı, ü, ö',['Rüzgâr yağmuru kapıdan içeri getirdi.','Dağdaki köyde soğuk bir kış geçirdik.','Kırk yıllık arkadaşım bana hâlâ kızgın.','Üç gün önce göl kenarında yürüdük.']],
+['Tekerlemeler · diction tongue-twisters',['Şu köşe yaz köşesi, şu köşe kış köşesi, ortada su şişesi.','Bir berber bir berbere bre berber gel beraber bir berber dükkânı açalım demiş.','Kartal kalkar dal sarkar, dal sarkar kartal kalkar.','Al bu takatukaları takatukacıya götür.']],
+['Doğal hız · natural speed',['Yarın akşam ne yapıyorsun, bir şeyler içelim mi?','Değil mi, sen de oradaydın?','Bir dakika, telefonum çalıyor.','Ne zamandır görüşemiyoruz, çok özledim seni.']],
+['C1 · uzun cümleler',['Bilmediğim bir konuda fikir yürütmek istemem, ama bu kararın sonuçlarının göz ardı edildiğini düşünüyorum.','Her ne kadar yorgun olsam da, söz verdiğim için toplantıya katılacağım.','Söz konusu yönetmeliğe istinaden başvurunuzun yeniden değerlendirilmesini rica ederim.']]
+];
+const RED=[['geliyorum','geliyom','I\'m coming'],['yapıyorsun','yapıyon','you\'re doing'],['ne yapıyorsun?','napıyon?','what are you up to?'],['yapacağım','yapcam','I\'ll do'],['gideceğiz','gitcez','we\'ll go'],['bir şey','bi şey','something'],['bir dakika','bi dakka','one minute'],['değil mi?','di mi?','isn\'t it?'],['hiçbir şey','hiçbişey','nothing'],['geliyor musun?','geliyo musun?','are you coming?'],['ağabey','abi','big brother'],['oğlum','oolum','my son / mate'],['ne oldu?','n\'oldu?','what happened?'],['bilmiyorum','bilmiyom','I don\'t know']];
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let tq=0,tScore=[0,0],recr=null,recUrl={};
+function tWords(ws){return`<div class="words">${ws.map(w=>{const[s,d,g]=w.split('|');return`<button class="pw" data-say="${esc(s)}">${esc(d)}${g?` <small>${esc(g)}</small>`:''}</button>`}).join('')}</div>`}
+function bindSay(root){root.querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(b.dataset.say))}
+function drawT(){
+  const box=$('tBox'),tp=st.tp||'ses';
+  $('voiceNote').innerHTML=!canSpeak?'This browser cannot speak Turkish aloud. Use Chrome or Edge.':voice?`Voice: <b>${esc(voice.name)}</b>. Click any word or sentence to hear it.`:'No Turkish voice found on this device yet. On Windows: Settings › Time & language › Speech › Add voices › Türkçe. Chrome\'s "Google Türkçe" voice sounds best.';
+  if(tp==='ses'){
+    box.innerHTML=`<div class="snd">${SND.map(s=>`<div class="card"><svg class="ros"><use href="#ros"/></svg><h3>${esc(s.t)}</h3><p>${esc(s.h)}</p><p class="who"><b>Dutch:</b> ${esc(s.nl)}</p><p class="who"><b>English:</b> ${esc(s.en)}</p>${tWords(s.w)}</div>`).join('')}</div>`;bindSay(box);return}
+  if(tp==='vurgu'){
+    const [sy,ok]=STR[tq%STR.length],word=sy.join('');
+    box.innerHTML=`<div class="card flip" style="max-width:720px"><svg class="ros"><use href="#ros"/></svg><div class="meta"><span class="tag lv">Vurgu</span><span>Word ${tq%STR.length+1} of ${STR.length} · score ${tScore[0]} / ${tScore[1]}</span></div>
+    <p class="prompt">Which syllable carries the stress in Istanbul Turkish?</p><div class="syls">${sy.map((x,i)=>`<button class="syl" data-i="${i}">${esc(x)}</button>`).join('')}</div><div id="sfb"></div></div>`;
+    box.querySelectorAll('.syl').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,good=i===ok;tScore[1]++;if(good)tScore[0]++;
+      box.querySelectorAll('.syl').forEach(x=>{x.disabled=true;if(+x.dataset.i===ok)x.classList.add('right')});if(!good)b.classList.add('wrong');
+      $('sfb').innerHTML=`<p class="hint" style="font-size:16px">${good?'Doğru.':'Not quite.'} <b>${sy.map((x,j)=>j===ok?x.toLocaleUpperCase('tr'):x).join('-')}</b></p><div class="row"><button class="pw" data-say="${esc(word)}">Dinle</button><button class="btn pri" id="sNext">Next word</button></div>`;
+      bindSay(box);$('sNext').onclick=()=>{tq++;drawT()};$('sNext').focus()});return}
+  if(tp==='golge'){
+    let k=0;
+    box.innerHTML=`<div class="prose" style="max-width:none;margin-bottom:16px"><p style="margin:0">Play the sentence, record yourself saying it the same way, then play both back and compare. <b>Anlaşıldı mı?</b> uses your browser's Turkish speech recognition to write down what it heard: that measures how clear you are, not how Istanbul you sound.${SR?'':' <i>Speech recognition needs Chrome or Edge.</i>'}</p></div>`+
+    SH.map(([lvl,ss])=>`<h3 style="font-size:20px;margin:22px 0 10px">${esc(lvl)}</h3><ul class="shl">${ss.map(s=>{const id='s'+(k++);return`<li data-id="${id}" data-s="${esc(s)}"><p class="s">${esc(s)}</p><div class="row"><button class="btn pri" data-act="play">Dinle</button><button class="btn" data-act="rec">Kaydet · record</button><button class="btn" data-act="me"${recUrl[id]?'':' disabled'}>Kendimi dinle</button>${SR?'<button class="btn" data-act="sr">Anlaşıldı mı?</button>':''}</div><div class="heard"></div></li>`}).join('')}</ul>`).join('');
+    box.querySelectorAll('.shl li').forEach(li=>li.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>shAct(li,b)));return}
+  box.innerHTML=`<div class="prose" style="max-width:none"><p style="margin-top:0">This is how Istanbul speakers actually say everyday forms in relaxed conversation. Using them with friends and family is what makes speech sound local rather than learned. Keep the full forms for writing, work and formal situations.</p></div>
+  <table class="stack redu"><thead><tr><th>Yazı · written</th><th>İstanbul ağzı · spoken</th><th>Meaning</th><th>Dinle</th></tr></thead><tbody>${RED.map(([a,b,g])=>`<tr><td>${esc(a)}</td><td>${esc(b)}</td><td>${esc(g)}</td><td><button class="pw" data-say="${esc(a)}">full</button> <button class="pw" data-say="${esc(b)}">spoken</button></td></tr>`).join('')}</tbody></table>
+  <p class="hint">The voice reads the spoken forms as written, so treat its version as a guide and copy real speakers for the exact sound.</p>`;bindSay(box);
+}
+async function shAct(li,b){
+  const s=li.dataset.s,id=li.dataset.id,act=b.dataset.act,out=li.querySelector('.heard');
+  if(act==='play')return speak(s);
+  if(act==='me'){if(recUrl[id])try{await new Audio(recUrl[id]).play()}catch(e){}return}
+  if(act==='rec'){
+    if(recr&&recr.state==='recording'){recr.stop();return}
+    try{const strm=await navigator.mediaDevices.getUserMedia({audio:true});const ch=[];recr=new MediaRecorder(strm);
+      recr.ondataavailable=e=>ch.push(e.data);
+      recr.onstop=()=>{strm.getTracks().forEach(t=>t.stop());recUrl[id]=URL.createObjectURL(new Blob(ch,{type:recr.mimeType}));b.textContent='Kaydet · record';li.querySelector('[data-act="me"]').disabled=false;out.textContent='Recorded. Play yourself back, then the model, and compare.'};
+      recr.start();b.textContent='■ Durdur · stop';out.textContent='Recording… speak now.';setTimeout(()=>{if(recr&&recr.state==='recording')recr.stop()},20000);
+    }catch(e){out.textContent='The microphone is not available here. Allow microphone access, or open the site in Chrome or Edge on https.'}
+    return}
+  if(act==='sr'){
+    try{const r=new SR();r.lang='tr-TR';r.interimResults=false;r.maxAlternatives=1;out.textContent='Listening… say the sentence.';
+      r.onresult=e=>{const heard=e.results[0][0].transcript,hs=new Set(norm(heard).split(' ')),tw=s.split(/\s+/);
+        const ok=tw.filter(w=>hs.has(norm(w))).length;
+        out.innerHTML=`Heard: “${esc(heard)}”<br>${tw.map(w=>`<span class="${hs.has(norm(w))?'ok':'no'}">${esc(w)}</span>`).join(' ')} · <b>${Math.round(ok/tw.length*100)}%</b> understood`};
+      r.onerror=e=>{out.textContent=e.error==='not-allowed'?'Microphone permission was refused.':'Nothing recognised. Try again a little closer to the microphone.'};
+      r.start()}catch(e){out.textContent='Speech recognition is not available in this browser.'}
+  }
+}
+
 /* ---- routing ---- */
-const views=['calis','dilbilgisi','test','liste','neden'];
+const views=['calis','dilbilgisi','telaffuz','test','liste','neden'];
 function route(){
   const v=views.includes(location.hash.slice(1))?location.hash.slice(1):'calis';
   views.forEach(x=>$('v-'+x).hidden=x!==v);
   document.querySelectorAll('#nav a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
-  if(v==='test'&&!qs.length)startQuiz();if(v==='liste')renderList();
+  if(v==='test'&&!qs.length)startQuiz();if(v==='liste')renderList();if(v==='telaffuz'&&st.tp!=='golge')drawT();
 }
 window.addEventListener('hashchange',route);
 $('newMax').textContent=NEWMAX;
@@ -975,6 +1093,10 @@ function segs(){
   seg($('qmSeg'),'qm',[['yaz','Type answer'],['sec','Multiple choice']],()=>{segs();startQuiz()});
 }
 segs();
+const tSegs=()=>{seg($('tpSeg'),'tp',[['ses','Sesler · sounds'],['vurgu','Vurgu · stress'],['golge','Gölge · shadowing'],['ist','İstanbul ağzı']],()=>{tSegs();drawT()});
+  seg($('rateSeg'),'rate',[['0.7','Yavaş'],['0.9','Normal'],['1.1','Hızlı']],()=>{tSegs()})};
+st.tp=st.tp||'ses';st.rate=st.rate||'0.9';tSegs();drawT();
+if(canSpeak)speechSynthesis.addEventListener('voiceschanged',()=>{if(!$('v-telaffuz').hidden)drawT()});
 chips($('catChips'),build);chips($('qChips'),startQuiz);
 build();wPick();drawToc();drawG();route();save();
 }
