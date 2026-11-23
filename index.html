@@ -4,6 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Türkçe Derinlik</title>
+<meta name="description" content="B2–C2 Turkish for heritage speakers: spaced-repetition flashcards, grammar drills and an Istanbul accent trainer.">
+<meta name="theme-color" content="#1b3a8a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Derinlik">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Türkçe Derinlik">
+<meta property="og:description" content="B2–C2 Turkish for heritage speakers: flashcards, grammar and an Istanbul accent trainer.">
+<meta property="og:url" content="https://furkanork.github.io/Turkish-camp/">
+<meta property="og:image" content="https://furkanork.github.io/Turkish-camp/icons/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -30,6 +47,10 @@ header h1{font-size:clamp(30px,5vw,46px)}
 header p{margin:8px 0 0;color:#dbe4ff;max-width:58ch}
 .frieze{display:block;width:100%;height:44px;background:var(--hd2);color:#5fd6ca}
 .stats{display:flex;gap:22px;flex-wrap:wrap}
+.inst{align-self:center;min-height:48px;padding:8px 16px;border-radius:12px;border:2px solid #5fd6ca;background:transparent;color:#fff;font:600 15px/1.2 "Work Sans",sans-serif;cursor:pointer;text-align:left}
+.inst small{display:block;font-weight:400;font-size:12px;color:#c9d4f5}
+.inst:hover{background:rgba(95,214,202,.15)}
+.inst[hidden]{display:none}
 .stat b{display:block;font:700 28px/1 Literata,serif}.stat span{font-size:13px;color:#c9d4f5}
 nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln)}
 nav .wrap{display:flex;gap:2px;overflow-x:auto;padding:0 max(5vw,16px);scrollbar-width:none}
@@ -138,14 +159,14 @@ footer{color:var(--mut);font-size:14px;border-top:1px solid var(--ln)}
 .scroll{overflow-x:auto}html{scroll-padding-top:72px}
 @media(prefers-reduced-motion:no-preference){.flip{animation:fl .35s ease}@keyframes fl{from{transform:translateY(8px);opacity:.4}to{transform:none;opacity:1}}}
 @media(max-width:820px){.grid2,.gram{grid-template-columns:minmax(0,1fr)}.toc{position:static;flex-direction:row;overflow-x:auto;padding-bottom:6px}.toc button{flex:none;white-space:nowrap}.filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.filters input{grid-column:1/-1}}
-@media(max-width:600px){.opts{grid-template-columns:minmax(0,1fr)}table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--ln)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:6.5em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:6em;margin-inline-start:-6.5em;color:var(--mut)}.stack td:empty{display:none}}
+@media(max-width:600px){header p{display:none}header .band{padding-block:18px}.frieze{height:30px}.stat b{font-size:24px}.opts{grid-template-columns:minmax(0,1fr)}table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--ln)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:6.5em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:6em;margin-inline-start:-6.5em;color:var(--mut)}.stack td:empty{display:none}}
 </style><script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ros" viewBox="-50 -50 100 100"><g fill="none" stroke="currentColor" stroke-width="2.4"><circle r="46"/><circle r="10"/><path id="pet" d="M0-12C10-22 10-36 0-44C-10-36-10-22 0-12Z"/><use href="#pet" transform="rotate(45)"/><use href="#pet" transform="rotate(90)"/><use href="#pet" transform="rotate(135)"/><use href="#pet" transform="rotate(180)"/><use href="#pet" transform="rotate(225)"/><use href="#pet" transform="rotate(270)"/><use href="#pet" transform="rotate(315)"/></g></symbol></svg>
 
 <header><div class="band"><div class="wrap">
   <div><h1>Türkçe Derinlik</h1><p>You already speak Turkish. This trains the 20% you don't use yet: connectors, complex clauses, cases, register and idioms that make B/C-level Turkish sound fluent.</p></div>
-  <div class="stats"><div class="stat"><b id="sDue">0</b><span>due today</span></div><div class="stat"><b id="sLearn">0</b><span>learned</span></div><div class="stat"><b id="sStreak">0</b><span>day streak</span></div></div>
+  <div class="stats"><div class="stat"><b id="sDue">0</b><span>due today</span></div><div class="stat"><b id="sLearn">0</b><span>learned</span></div><div class="stat"><b id="sStreak">0</b><span>day streak</span></div><button class="inst" id="inst" hidden>Uygulamayı yükle<small>Install on phone</small></button></div>
 </div></div>
 <svg class="frieze" aria-hidden="true"><defs><pattern id="pt" width="44" height="44" patternUnits="userSpaceOnUse"><use href="#ros" x="4" y="4" width="36" height="36"/></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>
 </header>
@@ -861,11 +882,11 @@ function drawCard(){
   box.innerHTML=`<div class="card flip"><svg class="ros"><use href="#ros"/></svg>${meta}${body}</div>`;
   const s=$('say');if(s)s.onclick=()=>speak(shown?cur.ex:cur.tr);
   const r=$('rev');if(r)r.onclick=()=>{res=null;shown=true;drawCard()};
-  const a=$('ans');if(a){const go=()=>{res=check(a.value,cur.ans);shown=true;drawCard()};a.focus();a.onkeydown=e=>{if(e.key==='Enter'&&a.value.trim())go()};$('chk').onclick=()=>{if(a.value.trim())go()};
+  const a=$('ans');if(a){const go=()=>{res=check(a.value,cur.ans);shown=true;drawCard()};if(finePtr)a.focus();a.onkeydown=e=>{if(e.key==='Enter'&&a.value.trim())go()};$('chk').onclick=()=>{if(a.value.trim())go()};
     $('hintB').onclick=()=>{$('hintT').textContent='Starts with “'+cur.ans[0]+'” · '+cur.ans.replace(/\S/g,'·').replace(/^·/,cur.ans[0])}}
   box.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>grade(+b.dataset.g));
 }
-let res=null;
+let res=null;const finePtr=matchMedia('(pointer: fine)').matches;
 const norm=s=>s.toLocaleLowerCase('tr').replace(/[âá]/g,'a').replace(/î/g,'i').replace(/û/g,'u').replace(/[.,!?;:"'’“”—–\-]/g,' ').replace(/\s+/g,' ').trim();
 const lev=(a,b)=>{const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]};
 function check(given,ans){const g=norm(given),a=norm(ans);return{given,ok:g===a,near:g!==a&&a.length>4&&lev(g,a)<=1}}
@@ -953,7 +974,7 @@ function drawQ(){
     box.innerHTML=`<div class="card flip"><svg class="ros"><use href="#ros"/></svg><div class="meta"><span class="tag lv">${it.lv}</span><span class="tag">${CATS[it.c].n}</span><span>Question ${qi+1} of ${qs.length} · score ${score}</span></div>
     <p class="term" style="font-size:clamp(24px,4vw,34px);color:var(--ink)">${exHTML(it.ex,true)}</p><p class="hint">Meaning: ${esc(it.en)}. Type the missing words.</p>
     <div class="ansrow"><input id="qa" autocomplete="off" autocapitalize="off" spellcheck="false" lang="tr" placeholder="Türkçesi…" aria-label="Your answer"><button class="btn pri" id="qchk">Kontrol</button></div><div id="fb"></div></div>`;
-    const a=$('qa');a.focus();
+    const a=$('qa');if(finePtr)a.focus();
     const go=()=>{const r=check(a.value,it.ans);if(r.ok)score++;a.disabled=true;$('qchk').disabled=true;
       if(!r.ok&&st.p[it.id]){st.p[it.id]={box:0,due:today()};save()}
       $('fb').innerHTML=`${resHTML(a.value.trim()?r:null,it.ans)}<p class="ex" style="margin-top:14px">${exHTML(it.ex)}</p><p class="hint"><b>${esc(it.tr)}</b>${!r.ok&&st.p[it.id]?' · moved back to today\'s reviews':''}</p><div class="row"><button class="btn pri" id="nq">${qi+1<qs.length?'Next':'See score'}</button></div>`;
@@ -1070,6 +1091,22 @@ async function shAct(li,b){
       r.onerror=e=>{out.textContent=e.error==='not-allowed'?'Microphone permission was refused.':'Nothing recognised. Try again a little closer to the microphone.'};
       r.start()}catch(e){out.textContent='Speech recognition is not available in this browser.'}
   }
+}
+
+/* ---- install as app ---- */
+{
+  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const btn=$('inst');let deferred=null;
+  if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(!standalone)btn.hidden=false});
+  window.addEventListener('appinstalled',()=>{btn.hidden=true;deferred=null});
+  if(ios&&!standalone)btn.hidden=false;
+  btn.onclick=async()=>{
+    if(deferred){deferred.prompt();try{await deferred.userChoice}catch(e){}deferred=null;btn.hidden=true;return}
+    $('dlg').innerHTML=`<div class="dlg"><div><h3>Install on your phone</h3>${ios?`<p>In <b>Safari</b>: tap the <b>Share</b> button (the square with an arrow), then <b>Add to Home Screen</b>, then <b>Add</b>.</p><p class="hint">It has to be Safari: Chrome on iPhone can't install apps.</p>`:`<p>In <b>Chrome</b>: open the <b>⋮</b> menu, then <b>Add to Home screen</b> or <b>Install app</b>.</p>`}<p class="hint">The app works offline and keeps your progress on the phone.</p><div class="row"><button class="btn pri" id="dOk">OK</button></div></div></div>`;
+    $('dOk').onclick=()=>$('dlg').innerHTML='';
+  };
 }
 
 /* ---- routing ---- */

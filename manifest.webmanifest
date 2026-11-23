@@ -1,0 +1,24 @@
+{
+  "name": "Türkçe Derinlik",
+  "short_name": "Derinlik",
+  "description": "B2–C2 Turkish for heritage speakers: flashcards, grammar and an Istanbul accent trainer.",
+  "lang": "tr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1b3a8a",
+  "theme_color": "#1b3a8a",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Çalış · Practise", "url": "./#calis", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Telaffuz · Accent", "url": "./#telaffuz", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Dilbilgisi · Grammar", "url": "./#dilbilgisi", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
