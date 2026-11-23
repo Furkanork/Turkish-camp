@@ -6,15 +6,17 @@ A single-page study site for heritage speakers of Turkish who want to move from 
 
 ## What's inside
 
-- **Çalış (Practise):** spaced-repetition flashcards (Leitner boxes: 1, 3, 7, 16, 35 days) across 247 items, released in weighted order so the highest-payoff categories come first.
+- **Çalış (Practise):** spaced-repetition flashcards (Leitner boxes: 1, 3, 7, 16, 35 days) across 341 items (B1–C2), released in weighted order so the highest-payoff categories come first. Defaults to C1+ and to typing the Turkish from the English (EN → TR), so you produce the exact form instead of just recognising it.
   - Bağlaçlar: connectors
   - Eylem yapıları: clause structures
   - Hal & edatlar: verb cases and postpositions
   - Sosyal & resmî: set phrases and formal register
   - Soyut kelimeler: abstract vocabulary
+  - Yüksek üslup: formal and Ottoman-origin vocabulary
   - Deyimler: idioms
-- **Dilbilgisi (Grammar):** 15 B2–C1 topics, each with the rule, examples, a common-mistake note and a drill.
-- **Test:** fill-in-the-gap quiz; missed items go back into today's reviews.
+  - Atasözleri: proverbs
+- **Dilbilgisi (Grammar):** 22 B2–C2 topics, each with the rule, examples, a common-mistake note and a drill.
+- **Test:** fill-in-the-gap quiz, typed or multiple choice; missed items go back into today's reviews.
 - **Liste:** searchable library filtered by category and level.
 - **Yazma:** a writing prompt using your current words.
 
