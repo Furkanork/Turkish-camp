@@ -6,9 +6,10 @@ A single-page study site for heritage speakers of Turkish who want to move from 
 
 ## What's inside
 
-- **Çalış (Practise):** spaced-repetition flashcards (Leitner boxes: 1, 3, 7, 16, 35 days) across 341 items (B1–C2), released in weighted order so the highest-payoff categories come first. Defaults to C1+ and to typing the Turkish from the English (EN → TR), so you produce the exact form instead of just recognising it.
+- **Çalış (Practise):** spaced-repetition flashcards (Leitner boxes: 1, 3, 7, 16, 35 days) across 463 items (296 at C1–C2), released in weighted order so the highest-payoff categories come first. Defaults to C1+ and to typing the Turkish from the English (EN → TR), so you produce the exact form instead of just recognising it.
   - Bağlaçlar: connectors
   - Eylem yapıları: clause structures
+  - Eşdizimler: collocations
   - Hal & edatlar: verb cases and postpositions
   - Sosyal & resmî: set phrases and formal register
   - Soyut kelimeler: abstract vocabulary
