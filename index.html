@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Türkçe Derinlik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a calm, encouraging study companion for a heritage speaker filling B/C gaps
+   IDEA: an İznik tile panel: each card is a glazed tile, the header a band of rosette tiles
+   PICTURE: the live flashcard itself, large, with a rosette in its corner; tile frieze under the header
+   COLOUR and TYPE: cobalt dominant, turquoise support, İznik red accent; white by day, deep indigo by night; Literata + Work Sans
+   LAYOUT: modest title, tabs, the card first; grammar, library and rationale behind their tabs */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0a1024);--ink:light-dark(#121a33,#eef1fb);--mut:light-dark(#56607a,#a3adc9);
+--co:light-dark(#1b3a8a,#9db8ff);--fill:light-dark(#1b3a8a,#3b63d9);--on:#ffffff;
+--tq:light-dark(#138a82,#4fd1c5);--tqf:light-dark(#138a82,#1d9c91);
+--rd:light-dark(#c4122f,#ff7a8c);--tile:light-dark(#f3f6fd,#131c3a);--ln:light-dark(#d9e0f0,#26345f);
+--hd:light-dark(#1b3a8a,#14275f);--hd2:light-dark(#142d6e,#0f1d4a)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Work Sans",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Literata,Georgia,serif;font-weight:700;line-height:1.1;text-wrap:balance;margin:0}
+.band{padding:clamp(20px,3vw,40px) max(5vw,16px)}
+.wrap{max-width:1080px;margin:0 auto}
+header{background:var(--hd);color:#fff}
+header .wrap{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:14px 28px}
+header h1{font-size:clamp(30px,5vw,46px)}
+header p{margin:8px 0 0;color:#dbe4ff;max-width:58ch}
+.frieze{display:block;width:100%;height:44px;background:var(--hd2);color:#5fd6ca}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat b{display:block;font:700 28px/1 Literata,serif}.stat span{font-size:13px;color:#c9d4f5}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln)}
+nav .wrap{display:flex;gap:2px;overflow-x:auto;padding:0 max(5vw,16px);scrollbar-width:none}
+nav a{flex:none;display:flex;align-items:center;padding:0 14px;min-height:48px;color:var(--mut);text-decoration:none;font-weight:600;border-bottom:3px solid transparent}
+nav a:hover{color:var(--ink)}
+nav a[aria-current]{color:var(--co);border-color:var(--rd)}
+section[hidden]{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.chip{border:1px solid var(--ln);background:var(--bg);color:var(--ink);border-radius:99px;padding:8px 14px;min-height:40px;font:inherit;font-size:14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--fill);color:var(--on);border-color:var(--fill)}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--tq);outline-offset:2px}
+.card{position:relative;background:var(--tile);border:1px solid var(--ln);border-radius:18px;padding:clamp(22px,4vw,44px);min-height:340px;overflow:hidden;box-shadow:0 18px 40px -30px rgba(10,30,100,.55)}
+.card svg.ros{position:absolute;right:-46px;top:-46px;width:180px;height:180px;color:var(--tq);opacity:.2;pointer-events:none}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--mut);margin-bottom:14px}
+.tag{border:1px solid var(--ln);border-radius:6px;padding:2px 8px;background:var(--bg)}
+.tag.lv{color:var(--rd);border-color:currentColor;font-weight:600}
+.term{font:700 clamp(32px,6vw,52px)/1.08 Literata,serif;color:var(--co);margin:0 0 10px;overflow-wrap:anywhere}
+.en{font-size:19px;margin:6px 0 14px}
+.ex{font-size:17px;border-left:3px solid var(--tq);padding-left:14px;margin:0}
+mark{background:none;color:var(--rd);font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{min-height:46px;padding:10px 18px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font-weight:600;text-decoration:none;display:inline-flex;flex-direction:column;justify-content:center}
+.btn:hover{border-color:var(--co)}
+.btn.pri{background:var(--fill);color:var(--on);border-color:var(--fill)}
+.btn.again{color:var(--rd);border-color:currentColor}
+.btn.ok{background:var(--tqf);border-color:var(--tqf);color:var(--on)}
+.btn small{display:block;font-weight:400;font-size:12px;opacity:.85}
+.hint{font-size:14px;color:var(--mut);margin-top:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;align-items:start}
+.side h3{font-size:20px;margin-bottom:8px}
+.side p{margin:0 0 10px;color:var(--mut);font-size:15px}
+textarea,input[type=search],select{width:100%;font:inherit;font-size:16px;padding:10px 12px;min-height:44px;border-radius:10px;border:1px solid var(--ln);background:var(--bg);color:var(--ink)}
+textarea{min-height:130px;resize:vertical}
+.bars .b{display:grid;grid-template-columns:minmax(0,1fr) 3.5em;gap:2px 10px;margin:10px 0;font-size:14px}
+.bars .b em{font-style:normal;color:var(--mut)}
+.bars .t{grid-column:1/-1;height:8px;border-radius:4px;background:var(--ln);overflow:hidden}.bars .t i{display:block;height:100%;background:var(--tq)}
+.bars .n{text-align:right;font-variant-numeric:tabular-nums}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
+.opt{min-height:52px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font-size:16px}
+.opt:hover:not(:disabled){border-color:var(--co)}
+.opt.right{border-color:var(--tq);background:color-mix(in srgb,var(--tq) 20%,var(--bg))}
+.opt.wrong{border-color:var(--rd);background:color-mix(in srgb,var(--rd) 16%,var(--bg))}
+.filters{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,.8fr);gap:10px;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--ln);vertical-align:top}
+th{font-size:13px;color:var(--mut);font-weight:600}
+td.tr{font-weight:600;color:var(--co)}
+.dots{white-space:nowrap;color:var(--tq);letter-spacing:2px}
+.gram{display:grid;grid-template-columns:minmax(0,17em) minmax(0,1fr);gap:28px;align-items:start}
+.toc{display:flex;flex-direction:column;gap:4px;position:sticky;top:64px}
+.toc button{display:flex;gap:10px;align-items:baseline;text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid transparent;background:none;color:var(--ink);cursor:pointer;font-size:15px}
+.toc button:hover{background:var(--tile)}
+.toc button[aria-current]{background:var(--tile);border-color:var(--ln);color:var(--co);font-weight:600}
+.toc .ck{flex:none;width:1.2em;color:var(--tq)}
+.gcard h2{font-size:clamp(26px,4vw,34px);color:var(--co);margin-bottom:4px}
+.gcard .sub{color:var(--mut);margin:0 0 16px}
+.gcard h3{font-size:18px;margin:22px 0 8px}
+.gcard ul{margin:0;padding-left:1.2em}.gcard li{margin:4px 0}
+.exl{list-style:none;padding:0!important}.exl li{border-left:3px solid var(--tq);padding:2px 0 2px 12px;margin:8px 0}
+.exl span{display:block;color:var(--mut);font-size:14px}
+.trap{background:color-mix(in srgb,var(--rd) 9%,var(--bg));border:1px solid color-mix(in srgb,var(--rd) 35%,var(--ln));border-radius:12px;padding:12px 16px;margin-top:18px;font-size:15px}
+.drill{border-top:1px solid var(--ln);margin-top:24px;padding-top:6px}
+.dq{margin:16px 0}.dq p{margin:0;font-size:17px}
+.dq .opts{margin-top:10px}
+.prose{max-width:68ch}.prose h2{font-size:32px;margin-bottom:14px}.prose h3{font-size:21px;margin:26px 0 8px}
+.prose .note{font-size:14px;color:var(--mut)}
+.empty{text-align:center;padding:40px 10px}.empty h2{font-size:30px;color:var(--co);margin-bottom:10px}
+.dlg{position:fixed;inset:0;background:rgba(5,10,30,.6);display:grid;place-items:center;padding:16px;z-index:20}
+.dlg>div{background:var(--bg);border-radius:16px;padding:24px;max-width:420px;border:1px solid var(--ln)}
+footer{color:var(--mut);font-size:14px;border-top:1px solid var(--ln)}
+.scroll{overflow-x:auto}html{scroll-padding-top:72px}
+@media(prefers-reduced-motion:no-preference){.flip{animation:fl .35s ease}@keyframes fl{from{transform:translateY(8px);opacity:.4}to{transform:none;opacity:1}}}
+@media(max-width:820px){.grid2,.gram{grid-template-columns:minmax(0,1fr)}.toc{position:static;flex-direction:row;overflow-x:auto;padding-bottom:6px}.toc button{flex:none;white-space:nowrap}.filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.filters input{grid-column:1/-1}}
+@media(max-width:600px){.opts{grid-template-columns:minmax(0,1fr)}table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--ln)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:6.5em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:6em;margin-inline-start:-6.5em;color:var(--mut)}.stack td:empty{display:none}}
+</style><script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ros" viewBox="-50 -50 100 100"><g fill="none" stroke="currentColor" stroke-width="2.4"><circle r="46"/><circle r="10"/><path id="pet" d="M0-12C10-22 10-36 0-44C-10-36-10-22 0-12Z"/><use href="#pet" transform="rotate(45)"/><use href="#pet" transform="rotate(90)"/><use href="#pet" transform="rotate(135)"/><use href="#pet" transform="rotate(180)"/><use href="#pet" transform="rotate(225)"/><use href="#pet" transform="rotate(270)"/><use href="#pet" transform="rotate(315)"/></g></symbol></svg>
+
+<header><div class="band"><div class="wrap">
+  <div><h1>Türkçe Derinlik</h1><p>You already speak Turkish. This trains the 20% you don't use yet: connectors, complex clauses, cases, register and idioms that make B/C-level Turkish sound fluent.</p></div>
+  <div class="stats"><div class="stat"><b id="sDue">0</b><span>due today</span></div><div class="stat"><b id="sLearn">0</b><span>learned</span></div><div class="stat"><b id="sStreak">0</b><span>day streak</span></div></div>
+</div></div>
+<svg class="frieze" aria-hidden="true"><defs><pattern id="pt" width="44" height="44" patternUnits="userSpaceOnUse"><use href="#ros" x="4" y="4" width="36" height="36"/></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>
+</header>
+<nav><div class="wrap" id="nav"><a href="#calis">Çalış · Practise</a><a href="#dilbilgisi">Dilbilgisi · Grammar</a><a href="#test">Test · Quiz</a><a href="#liste">Liste · Library</a><a href="#neden">Neden 80/20?</a></div></nav>
+
+<main>
+<section id="v-calis" class="band"><div class="wrap">
+  <div class="chips" id="catChips"></div>
+  <div class="grid2">
+    <div id="cardBox"></div>
+    <aside class="side">
+      <h3>Today's 20%</h3>
+      <p>Reviews come first, then up to <b id="newMax">10</b> new items, released so the highest-payoff categories appear earliest.</p>
+      <div class="bars" id="bars"></div>
+      <h3 style="margin-top:24px">Yazma · write it</h3>
+      <p id="wPrompt">Use these in two or three sentences of your own:</p>
+      <textarea id="wText" placeholder="Bugün…" aria-label="Your sentences"></textarea>
+      <div class="row" style="margin-top:10px"><button class="btn" id="wNew">New words</button><button class="btn" id="reset">Reset progress</button></div>
+    </aside>
+  </div>
+</div></section>
+
+<section id="v-dilbilgisi" class="band" hidden><div class="wrap gram">
+  <div class="toc" id="toc"></div>
+  <div id="gBox"></div>
+</div></section>
+
+<section id="v-test" class="band" hidden><div class="wrap"><div class="chips" id="qChips"></div><div id="quizBox"></div></div></section>
+
+<section id="v-liste" class="band" hidden><div class="wrap">
+  <div class="filters"><input type="search" id="q" placeholder="Search Turkish or English…" aria-label="Search"><select id="fCat" aria-label="Category"></select><select id="fLv" aria-label="Level"><option value="">All levels</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></div>
+  <p class="hint" id="count"></p>
+  <table class="stack"><thead><tr><th>Türkçe</th><th>Meaning</th><th>Example</th><th>Level</th><th>Box</th></tr></thead><tbody id="tb"></tbody></table>
+</div></section>
+
+<section id="v-neden" class="band" hidden><div class="wrap prose">
+  <h2>Why these items, and why 80/20</h2>
+  <p>Heritage speakers usually have strong everyday Turkish: home vocabulary, natural pronunciation, solid A2–B1 grammar. The gap that keeps you from sounding fully fluent is narrow and predictable. It sits in the parts of the language you rarely heard at the kitchen table but meet constantly in news, work, books and with older or formal speakers.</p>
+  <h3>The 20% this site drills</h3>
+  <ol>
+    <li><b>Bağlaçlar (connectors)</b> such as <i>oysa, nitekim, kaldı ki, dolayısıyla</i>. A small closed set that structures every argument, email and opinion.</li>
+    <li><b>Eylem yapıları (clause structures)</b> such as <i>-dıkça, -dığı halde, -maksızın, -dığı takdirde</i>. They let you build one complex sentence instead of three short ones: the clearest audible marker of B2 → C1.</li>
+    <li><b>Hal & edatlar (verb cases and postpositions)</b>: <i>-den kaynaklanmak, -e dayanmak, -e ilişkin</i>. Getting the case right is what separates "understandable" from "correct".</li>
+    <li><b>Sosyal ve resmî kalıplar (set phrases and register)</b>: <i>kolay gelsin, başınız sağ olsun, gereğini arz ederim</i>. Small, used daily, and socially costly when missing.</li>
+    <li><b>Soyut kelimeler (abstract vocabulary)</b> from news and work: <i>eğilim, gerekçe, öngörmek, tutarlı</i>.</li>
+    <li><b>Deyimler (idioms)</b>: the ones people actually say.</li>
+  </ol>
+  <p>The <b>Grammar</b> tab covers the 15 structures that do the most work at B2–C1: relative clauses, that-clauses, indirect questions, causative, passive, evidential -mış, conditionals, compound tenses, modality, reported speech, formal written style and the spelling points (de/da, ki, mi) that give heritage writers away.</p>
+  <h3>How the deck uses it</h3>
+  <p>Each category has a weight (the bars on the Practise tab). New cards are released in weighted order, so connectors and clause structures arrive first and idioms last. Reviews use a simple Leitner schedule: <b>Biliyorum</b> moves a card up a box (next review in 1, 3, 7, 16, then 35 days), <b>Zor</b> brings it back tomorrow, <b>Tekrar</b> repeats it in this session.</p>
+  <h3>Getting the other 80% for free</h3>
+  <p>The deck is only the input. Use each new item in the Yazma box, then out loud with family, and read one Turkish opinion column a day: they are dense with exactly these connectors and structures.</p>
+  <p class="note">The category weights are a teaching judgement based on what heritage learners typically lack, not a measured corpus statistic. Progress is saved in this browser only.</p>
+</div></section>
+</main>
+<footer class="band"><div class="wrap" id="foot">Tip: on the card, press Space to reveal, then 1 / 2 / 3.</div></footer>
+<div id="dlg"></div>
+
+<script>
+{
+const RAW={
+b:`ne var ki|however, yet (formal)|Plan mükemmeldi, {ne var ki} bütçe yetmedi.|B2
+oysa|whereas, yet in fact|Herkes onu tembel sanıyor, {oysa} gece gündüz çalışıyor.|B2
+dolayısıyla|consequently, therefore|Yollar kapalıydı, {dolayısıyla} toplantıya geç kaldık.|B2
+halbuki|whereas, even though (contrary to what was expected)|Bana kızdı, {halbuki} ben sadece yardım etmek istemiştim.|B2
+üstelik|furthermore, what's more|Ev çok ucuz, {üstelik} denize de yakın.|B1
+gerçi|admittedly, although|Yemek güzeldi, {gerçi} biraz tuzluydu.|B2
+ancak|however; only|Yardım etmek isterdim, {ancak} hiç vaktim yok.|B2
+nitekim|indeed, as was predicted (confirms an earlier claim)|Bu projenin zor olacağını söylemiştim; {nitekim} öyle de oldu.|C1
+kaldı ki|besides, and on top of that|Bu işe vaktim yok, {kaldı ki} hiç ilgimi de çekmiyor.|C1
+buna rağmen|despite this|Herkes uyardı; {buna rağmen} yola çıktı.|B2
+meğer|it turns out (sudden realisation)|{Meğer} o gün onun doğum günüymüş.|B2
+madem|since, given that|{Madem} bu kadar istiyorsun, git o zaman.|B2
+aksine|on the contrary|Sınav zor değildi, {aksine} çok kolaydı.|B2
+öyle ki|so much so that|Salon çok kalabalıktı, {öyle ki} nefes alamıyorduk.|B2
+bununla birlikte|nevertheless, that said|Fiyatı yüksek; {bununla birlikte} kalitesi tartışılmaz.|C1
+her ne kadar|although, even though (… -sa da)|{Her ne kadar} yorgun olsa da partiye geldi.|C1
+öte yandan|on the other hand|Bir yandan yeni bir hayat istiyorum, {öte yandan} ailemden ayrılmak istemiyorum.|B2
+dahası|moreover|Geç geldi, {dahası} özür bile dilemedi.|B2
+zira|because, for (literary)|Erken yattım, {zira} sabah uçağım vardı.|C1
+yeter ki|as long as, provided that|Ne istersen yaparım, {yeter ki} mutlu ol.|B2
+kısacası|in short|{Kısacası}, bu plan işe yaramaz.|B2
+özetle|to sum up|{Özetle}, projenin üç ana hedefi var.|B2
+şayet|if (formal)|{Şayet} kabul ederseniz, yarın başlarız.|C1
+gelgelelim|and yet, however|Çok para kazandı; {gelgelelim} hiç mutlu olmadı.|C1
+neticede|ultimately, after all|{Neticede} hepimiz aynı gemideyiz.|C1
+hatta|even, in fact|Çok yorulmuştu, {hatta} ayakta uyuyordu.|B1
+yine de|still, even so|Çok yorgundu, {yine de} bize yardım etti.|B1
+aslında|actually, in fact|{Aslında} bu konuda haklısın.|B1
+sanki|as if|{Sanki} beni hiç tanımıyormuş gibi davrandı.|B1
+ayrıca|also, in addition|{Ayrıca} raporun yarına kadar bitmesi lazım.|B1
+nihayet|finally, at last|Saatlerce bekledik, {nihayet} otobüs geldi.|B2
+şöyle ki|namely, that is to say|Bir sorunumuz var, {şöyle ki} sunucu her gece çöküyor.|C1
+sözgelimi|for instance|Bazı meyveler, {sözgelimi} muz, kışın pahalıdır.|C1
+nasıl ki|just as (… öyle)|{Nasıl ki} ağaç kökünden beslenir, insan da öyle ailesinden beslenir.|C1
+ister istemez|inevitably, whether one likes it or not|Bu kadar baskı altında {ister istemez} hata yapıyorsun.|C1
+bilakis|on the contrary (formal)|Bu karar sorunu çözmedi, {bilakis} daha da büyüttü.|C2
+ne ki|but, however (literary)|Herkes sevindi; {ne ki} bu mutluluk uzun sürmedi.|C2
+velhasıl|in short, all in all (literary)|Yağmur yağdı, araba bozuldu, {velhasıl} berbat bir gündü.|C2`,
+y:`-dıkça|the more…; whenever|Bu kitabı {okudukça} daha çok seviyorum.|B2
+-dığı halde|even though|Söz {verdiği halde} gelmedi.|B2
+-ır -maz|as soon as|Eve {gelir gelmez} seni arayacağım.|B2
+-dığı sürece|as long as|Dürüst {olduğun sürece} sana güvenirim.|B2
+-dığına göre|judging by the fact that|Işıklar {yandığına göre} evdeler.|B2
+-maktansa|rather than|Evde {oturmaktansa} yürüyüşe çıkalım.|B2
+-alı|since (time)|Buraya {taşınalı} on yıl oldu.|B2
+-sın diye|so that|Çocuk {uyusun diye} ışığı kapattım.|B2
+-sa da -masa da|whether or not|{Gelse de gelmese de} toplantı başlayacak.|B2
+-ıncaya kadar|until|Sen {gelinceye kadar} burada beklerim.|B2
+-dığından|because (formal)|Yağmur {yağdığından} maç ertelendi.|B2
+-dığı takdirde|in the event that, if (formal)|Ödeme {yapılmadığı takdirde} sözleşme iptal edilir.|C1
+-maksızın|without (formal)|Hiç {durmaksızın} sekiz saat çalıştı.|C1
+-mışçasına|as if, as though|Hiçbir şey {olmamışçasına} gülümsedi.|C1
+-mak üzere|about to; in order to|Tren {kalkmak üzereyken} istasyona vardık.|B2
+-mekle birlikte|although (formal)|Teklifi {kabul etmekle birlikte} bazı şartlar koştu.|C1
+-dığı gibi|the moment that; just as|Kapıdan {girdiği gibi} yatağa uzandı.|C1
+-ecek kadar|so much that, enough to|{Ağlayacak kadar} güldük.|B2
+-acağına|instead of (doing)|{Yatacağına} biraz ders çalış!|C1
+-mek şartıyla|on condition that|Yarın {ödemek şartıyla} sana borç veririm.|C1
+-mesine kalmadan|no sooner than, before even|Sözünü {bitirmesine kalmadan} kapıyı çarpıp çıktı.|C1
+-ken bile|even while|{Uyurken bile} gülümsüyordu.|B2
+-mış olmalı|must have (done)|Bunu daha önce {söylemiş olmalıyım}.|C1
+-dı mı|once (colloquial: as soon as…)|O bir {başladı mı} susmak bilmez.|C1
+-ıver-|just / quickly do|Şu kitabı bana {veriver}.|B2
+-casına|like, as though (intensifying adverb)|Ona {delicesine} âşık oldu.|C1
+-esiye|to the point of, to the utmost|Takım son dakikaya kadar {ölesiye} mücadele etti.|C1
+-adursun|let (them) keep doing; meanwhile|Onlar {tartışadursun}, biz işimize bakalım.|C2
+-mış bulunmak|formal perfect (have done)|Kendisiyle bugün {görüşmüş bulunuyoruz}.|C2
+olsa olsa|at most|Bu adam {olsa olsa} otuz yaşındadır.|C1
+-sa bile|even if|Yağmur {yağsa bile} gideceğiz.|B1
+-masına rağmen|despite|Çok {çalışmasına rağmen} sınavı geçemedi.|B1
+-ınca|when, once|Haberi {duyunca} ağladı.|B1
+-madan|without (doing)|Bana {sormadan} karar verme.|B1
+-mek yerine|instead of|Taksiye {binmek yerine} yürüdük.|B1
+-a -a|by repeatedly doing|{Koşa koşa} eve geldi.|B1`,
+r:`-den kaynaklanmak|to stem from|Sorun yanlış bir anlaşılmadan {kaynaklanıyor}.|C1
+-e dayanmak|to be based on; to endure|İddiası sağlam verilere {dayanıyor}.|C1
+-den yararlanmak|to benefit from|Bu indirimden herkes {yararlanabilir}.|B2
+-e yol açmak|to lead to, cause|Bu karar büyük tartışmalara {yol açtı}.|C1
+-den vazgeçmek|to give up on|Hayallerinden asla {vazgeçme}.|B2
+-i ele almak|to address, deal with|Toplantıda bütçe konusunu {ele aldık}.|C1
+-e ilişkin|relating to (formal)|Projeye {ilişkin} sorularınızı iletebilirsiniz.|C1
+-e dair|concerning, about|Olaya {dair} yeni bilgiler ortaya çıktı.|C1
+-e yönelik|aimed at, directed at|Gençlere {yönelik} yeni bir program başlatıldı.|C1
+-e karşın|despite (formal)|Tüm çabalara {karşın} anlaşma sağlanamadı.|C1
+-den ötürü|because of|Hastalığından {ötürü} işe gelemedi.|C1
+-den kaçınmak|to avoid|Gereksiz harcamalardan {kaçınmalıyız}.|C1
+-le yüzleşmek|to confront, face|Geçmişinle {yüzleşmen} gerekiyor.|C1
+-e itiraz etmek|to object to|Avukat bu soruya {itiraz etti}.|C1
+-e özenmek|to look up to; take pains over|Küçük kardeşim abisine {özeniyor}.|C1
+-den sorumlu olmak|to be responsible for|Bu projeden ben {sorumluyum}.|B2
+-e sahip olmak|to possess, have|Şirket güçlü bir ekibe {sahip}.|B2
+-e bakılırsa|judging by|Hava durumuna {bakılırsa} yarın kar yağacak.|B2
+-den itibaren|from … onwards|Pazartesiden {itibaren} yeni saatler geçerli.|B2
+-le birlikte|along with, as a result of|Teknolojinin gelişmesiyle {birlikte} iş hayatı değişti.|B2
+-e katılmak|to agree with; to join|Bu konuda sana tamamen {katılıyorum}.|B1
+-den şikâyet etmek|to complain about|Komşular gürültüden {şikâyet etti}.|B1
+-e alışmak|to get used to|Buradaki soğuğa hâlâ {alışamadım}.|B1
+-e güvenmek|to trust, rely on|Ona sonuna kadar {güveniyorum}.|B1
+-e bağlı|depending on|Sonuç senin kararına {bağlı}.|B1
+-e dikkat etmek|to pay attention to|Lütfen yazım kurallarına {dikkat edin}.|B1
+-le ilgilenmek|to be interested in; to look after|Çocuklarla annem {ilgileniyor}.|B1
+-den başka|apart from, other than|Senden {başka} kimseye söylemedim.|B1
+-e göre|according to|Uzmanlara {göre} fiyatlar düşecek.|B1
+-e rağmen|despite|Yağmura {rağmen} maç oynandı.|B1`,
+s:`kolay gelsin|said to someone who is working|Bakkala girince "{Kolay gelsin}" dedim.|B1
+eline sağlık|thanks for the food / the effort|Yemek harikaydı, {eline sağlık}!|B1
+geçmiş olsun|get well soon; sorry for your trouble|Ameliyat olduğunu duydum, {geçmiş olsun}.|B1
+başınız sağ olsun|my condolences|Babanızı kaybettiğinizi duydum, {başınız sağ olsun}.|B2
+hayırlı olsun|congratulations on something new|Yeni eviniz {hayırlı olsun}.|B1
+zahmet olmazsa|if it's no trouble|{Zahmet olmazsa} pencereyi kapatır mısınız?|B2
+müsaadenizle|with your permission (e.g. to leave)|{Müsaadenizle} ben kalkayım.|B2
+estağfurullah|not at all, don't say that (modest reply)|— Sizi çok rahatsız ettim. — {Estağfurullah}, ne demek!|C1
+kusura bakmayın|I'm sorry, excuse me|{Kusura bakmayın}, geç kaldım.|B1
+hoş bulduk|reply to "hoş geldin"|— Hoş geldin! — {Hoş bulduk}.|B1
+ağzına sağlık|well said; thanks for a song or kind words|Ne güzel söyledin, {ağzına sağlık}.|B2
+helal olsun|well done, bravo|Bu işi tek başına bitirmişsin, {helal olsun}!|B1
+güle güle kullan|enjoy it (something new)|Araban çok güzel, {güle güle kullan}!|B1
+yolun açık olsun|good luck; safe journey|Yeni işinde {yolun açık olsun}.|B1
+afiyet olsun|enjoy your meal|Yemek hazır, {afiyet olsun}.|B1
+iyi ki varsın|I'm so glad you're in my life|Her şey için teşekkürler, {iyi ki varsın}.|B1
+zahmet ettiniz|you shouldn't have (thanks for the trouble)|Çiçek mi getirdiniz? {Zahmet ettiniz}.|B2
+hayırdır|what's up? is something wrong?|{Hayırdır}, bu saatte niye aradın?|B2
+nazar değmesin|touch wood, may no evil eye harm it|Çocuklar ne güzel büyümüş, {nazar değmesin}.|B2
+sağlıcakla kalın|stay well (goodbye)|Görüşmek üzere, {sağlıcakla kalın}.|B2
+Allah rahmet eylesin|may God rest their soul|Dedeniz çok iyi bir insandı, {Allah rahmet eylesin}.|B2
+sıhhatler olsun|said after a bath, shower or haircut|Berberden çıkınca "{Sıhhatler olsun}" dediler.|B2
+rica etsem|could I ask you (polite request)|{Rica etsem} bu belgeyi imzalar mısınız?|B2
+saygılarımla|respectfully, kind regards (sign-off)|Yardımlarınız için şimdiden teşekkür ederim. {Saygılarımla}.|B2
+geri dönüşünüzü rica ederim|I look forward to your reply|En kısa sürede {geri dönüşünüzü rica ederim}.|B2
+gözün aydın|congratulations (on a loved one's return or good news)|Oğlun askerden dönmüş, {gözün aydın}!|C1
+Allah kavuştursun|may you be reunited soon|Oğlun yurt dışına mı gitti? {Allah kavuştursun}.|C1
+kesenize bereket|thanks for treating us|Yemek için teşekkürler, {kesenize bereket}.|C1
+bereket versin|thank you (when paid or given something)|— Buyurun, paranız. — {Bereket versin}.|C1
+bilginize sunarım|for your information (formal email)|Toplantı notlarını {bilginize sunarım}.|C1
+gereğini arz ederim|I respectfully request the necessary action (to a superior)|Dilekçemin kabulü hususunda {gereğini arz ederim}.|C1
+ekte sunulmuştur|is attached (formal email)|İstenen belgeler {ekte sunulmuştur}.|C1
+hususunda|regarding (formal)|Ödeme {hususunda} sizi ayrıca bilgilendireceğiz.|C1
+makbule geçer|would be much appreciated|Yardımcı olursanız çok {makbule geçer}.|C1`,
+k:`kaçınılmaz|inevitable|Bu şartlarda değişim {kaçınılmaz}.|B2
+değerlendirmek|to assess; to make good use of|Bu fırsatı iyi {değerlendirmelisin}.|B2
+belirsizlik|uncertainty|Ekonomideki {belirsizlik} herkesi tedirgin ediyor.|B2
+yaklaşım|approach|Soruna farklı bir {yaklaşım} getirdi.|B2
+süreç|process|Başvuru {süreci} üç ay sürdü.|B2
+kaynak|source, resource|Bu bilginin {kaynağı} ne?|B2
+sağlamak|to provide, ensure|Şirket çalışanlarına sağlık sigortası {sağlıyor}.|B2
+ortaya çıkmak|to emerge, come to light|Gerçek sonunda {ortaya çıktı}.|B2
+gerçekleştirmek|to carry out, realise|Sonunda hayalini {gerçekleştirdi}.|B2
+eğilim|tendency, trend|Gençlerde büyük şehirden uzaklaşma {eğilimi} var.|C1
+öngörmek|to foresee|Krizi kimse {öngöremedi}.|C1
+gerekçe|justification, grounds|Kararın {gerekçesi} açıklanmadı.|C1
+kapsamlı|comprehensive|{Kapsamlı} bir rapor hazırladılar.|B2
+öncelik|priority|Sağlık her zaman {önceliğim}.|B2
+başvurmak|to apply; to resort to|Son çare olarak mahkemeye {başvurdu}.|B2
+katkı|contribution|Projeye büyük {katkı} sağladı.|B2
+etken|factor|Fiyat, kararımızda en önemli {etken} oldu.|C1
+tutarlı|consistent|Söyledikleriyle yaptıkları {tutarlı} değil.|C1
+kavram|concept|Özgürlük {kavramı} kültürden kültüre değişir.|C1
+bağlam|context|Bu sözü {bağlamından} kopararak yorumladılar.|C1
+boyut|dimension, aspect|Sorunun ekonomik bir {boyutu} da var.|C1
+eleştirmek|to criticise|Politikayı sert bir dille {eleştirdi}.|B2
+savunmak|to defend, argue for|Fikrini sonuna kadar {savundu}.|B2
+iddia etmek|to claim|Masum olduğunu {iddia ediyor}.|B2
+kanıt|evidence, proof|Bu iddiayı destekleyen hiçbir {kanıt} yok.|B2
+varsaymak|to assume|Herkesin bunu bildiğini {varsaydım}.|C1
+vazgeçilmez|indispensable|Kahve sabahlarımın {vazgeçilmez} parçası.|B2
+önyargı|prejudice|{Önyargılarından} kurtulmak kolay değil.|B2
+kuşku|doubt|Bundan hiç {kuşkum} yok.|C1
+çelişki|contradiction|İfadesinde ciddi {çelişkiler} var.|C1
+benimsemek|to adopt, embrace|Yeni kültürü kısa sürede {benimsedi}.|C1
+sürdürülebilir|sustainable|{Sürdürülebilir} bir büyüme hedefliyoruz.|C1
+sonuçlanmak|to result in, end in|Görüşmeler olumlu {sonuçlandı}.|C1
+yansıtmak|to reflect|Bu görüşler beni {yansıtmıyor}.|B2
+sorumluluk|responsibility|Bu {sorumluluğu} üstlenmeye hazırım.|B2
+kalıcı|permanent, lasting|{Kalıcı} bir çözüm bulmalıyız.|B2
+geçici|temporary|Bu sadece {geçici} bir önlem.|B2
+dengeli|balanced|{Dengeli} beslenmek önemli.|B2
+özgüven|self-confidence|{Özgüveni} çok yüksek.|B2
+hayal kırıklığı|disappointment|Sonuç büyük bir {hayal kırıklığı} oldu.|B2
+pişman olmak|to regret|Söylediklerime {pişman oldum}.|B2
+abartmak|to exaggerate|Bu kadar {abartma}, o kadar kötü değil.|B2
+özen göstermek|to take care, pay attention|Konuşurken kelimelerine {özen gösterir}.|B2
+ihmal etmek|to neglect|Sağlığını {ihmal etme}.|B2
+ölçüt|criterion|Başarıyı neye göre ölçüyoruz, {ölçütümüz} ne?|C1
+özgün|original|Çok {özgün} bir fikir.|C1
+nesnel|objective|Daha {nesnel} bir değerlendirme yapmalıyız.|C1
+öznel|subjective|Bu tamamen {öznel} bir yorum.|C1
+belirgin|distinct, marked|Aralarında {belirgin} bir fark var.|C1
+gerilim|tension|İki ülke arasında {gerilim} tırmanıyor.|C1
+uzlaşma|compromise, agreement|Taraflar sonunda {uzlaşmaya} vardı.|C1
+dayanışma|solidarity|Depremden sonra büyük bir {dayanışma} gördük.|C1
+kararlılık|determination|{Kararlılığı} sayesinde başardı.|C1
+küçümsemek|to underestimate, look down on|Rakibini asla {küçümseme}.|C1
+tedirgin|uneasy, unsettled|Bu sessizlik beni {tedirgin} etti.|C1
+yetinmek|to make do, be content with|Az ile {yetinmeyi} bilmek gerek.|C1
+gözlemlemek|to observe|Çocukların davranışlarını bir ay boyunca {gözlemledik}.|C1
+olgu|fact, phenomenon|Göç, toplumsal bir {olgudur}.|C2
+etkilemek|to affect, influence|Bu film beni derinden {etkiledi}.|B1
+yoğun|intense; busy|Bu hafta çok {yoğunum}.|B1
+yeterli|sufficient|Elimizdeki veriler {yeterli} değil.|B1
+toplum|society|{Toplumun} her kesiminden destek aldı.|B1
+fark etmek|to notice; to make a difference|Hatayı ancak sonra {fark ettim}.|B1
+ikna etmek|to persuade|Babamı {ikna etmek} kolay olmadı.|B1
+mecbur|obliged, compelled|Bu işi yapmaya {mecbur} değilsin.|B1`,
+d:`göze almak|to dare, accept the risk|Her şeyi {göze aldı} ve yurt dışına taşındı.|B2
+kulak asmamak|to ignore (advice)|Uyarılarıma hiç {kulak asmadı}.|B2
+hapı yutmak|to be done for, in deep trouble|Patron bunu öğrenirse {hapı yuttuk}.|B2
+kafa yormak|to rack one's brain|Bu sorun için çok {kafa yordum}.|B2
+dili dolaşmak|to get tongue-tied|Heyecandan {dili dolaştı}.|B2
+gözü tutmak|to take a liking to|Bu evi ilk görüşte {gözüm tuttu}.|B2
+ağzı açık kalmak|to be astonished|Manzarayı görünce {ağzımız açık kaldı}.|B2
+sabrı taşmak|to run out of patience|Sonunda {sabrım taştı} ve bağırdım.|B2
+dilinin ucunda olmak|to be on the tip of one's tongue|Adı {dilimin ucunda} ama hatırlayamıyorum.|B2
+ateş pahası|extremely expensive|İstanbul'da kiralar {ateş pahası}.|B2
+sudan ucuz|dirt cheap|Pazarda domates {sudan ucuz}.|B2
+burnu havada|stuck-up|Çok {burnu havada} biri, kimseyle konuşmuyor.|B2
+gözden düşmek|to fall out of favour|Yalanı ortaya çıkınca {gözden düştü}.|B2
+ağzı kulaklarına varmak|to grin from ear to ear|Hediyeyi görünce {ağzı kulaklarına vardı}.|B2
+eli boş dönmek|to return empty-handed|Pazardan {eli boş döndü}.|B2
+eşek şakası|crude practical joke|Bu {eşek şakası} hiç komik değildi.|B2
+eli kulağında|imminent, any moment now|Seçim {eli kulağında}.|C1
+işi oluruna bırakmak|to let things take their course|Endişelenmeyi bıraktım, {işi oluruna bıraktım}.|C1
+pireyi deve yapmak|to make a mountain out of a molehill|Küçük bir hata yüzünden {pireyi deve yapma}.|C1
+kılı kırk yarmak|to split hairs, be meticulous|Raporu hazırlarken {kılı kırk yardı}.|C1
+çam devirmek|to put one's foot in it|Toplantıda yine {çam devirdi}.|C1
+kulağına küpe olmak|to be a lesson learned|Bu olay {kulağıma küpe oldu}.|C1
+ayak uydurmak|to keep up with, adapt to|Değişen dünyaya {ayak uydurmak} zorundayız.|C1
+yüreği ağzına gelmek|to be terrified|Fren tutmayınca {yüreğim ağzıma geldi}.|C1
+kabak tadı vermek|to become tiresome|Bu dizi artık {kabak tadı verdi}.|C1
+damdan düşer gibi|out of the blue|{Damdan düşer gibi} istifa ettiğini söyledi.|C1
+taş çatlasa|at the very most|{Taş çatlasa} bu iş iki gün sürer.|C1
+etekleri zil çalmak|to be overjoyed|Haberi alınca {etekleri zil çaldı}.|C1
+ağzında bakla ıslanmamak|to be unable to keep a secret|Ona sır verme, {ağzında bakla ıslanmaz}.|C1
+yüzüne gözüne bulaştırmak|to botch, make a mess of|Basit bir işi {yüzüne gözüne bulaştırdı}.|C1
+burnundan kıl aldırmamak|to be haughty, unapproachable|Terfi alınca {burnundan kıl aldırmaz} oldu.|C1
+ağzının payını vermek|to put someone in their place|Laf atınca {ağzının payını verdim}.|C1
+gözü kara|fearless, daring|{Gözü kara} bir gazeteciydi.|C1
+gün yüzü görmemek|to never see good days|Ömrü boyunca {gün yüzü görmedi}.|C1
+el altından|secretly, under the table|Anlaşmayı {el altından} yapmışlar.|C1
+nabzına göre şerbet vermek|to tell people what they want to hear|Siyasetçiler herkesin {nabzına göre şerbet veriyor}.|C2
+ipe un sermek|to make excuses to avoid helping|Ne zaman yardım istesem {ipe un seriyor}.|C2
+pabucu dama atılmak|to be pushed aside, replaced|Yeni model çıkınca eskisinin {pabucu dama atıldı}.|C2
+etekleri tutuşmak|to panic|Müfettiş geliyor deyince {etekleri tutuştu}.|C2
+iki dirhem bir çekirdek|dressed to the nines|Düğüne {iki dirhem bir çekirdek} gelmiş.|C2
+dört gözle beklemek|to look forward to eagerly|Tatili {dört gözle bekliyorum}.|B1
+içi rahat etmek|to be reassured|Doktorla konuşunca {içi rahat etti}.|B1
+canı sıkılmak|to be bored; to be annoyed|Evde çok {canım sıkıldı}.|B1`};
+const CATS={b:{n:'Bağlaçlar',e:'Connectors',w:24},y:{n:'Eylem yapıları',e:'Clause structures',w:22},r:{n:'Hal & edatlar',e:'Verb cases & postpositions',w:14},s:{n:'Sosyal & resmî',e:'Set phrases & register',w:14},k:{n:'Soyut kelimeler',e:'Abstract vocabulary',w:16},d:{n:'Deyimler',e:'Idioms',w:10}};
+
+/* grammar topics: q = [prompt with ___, correct, wrong, wrong, wrong] */
+const G=[
+{t:'Sıfat-fiil: -an / -dık / -acak',e:'Relative clauses (who, which, that)',
+w:'Turkish has no word for "who/which". Every relative clause is a suffix on the verb, so this is the single biggest structure at B2.',
+r:['If the noun is the <b>subject</b> of the clause, use <b>-an</b>: <i>kitap okuyan kız</i> (the girl who reads books).','Otherwise use <b>-dık + possessive</b>: <i>kızın okuduğu kitap</i> (the book the girl reads).','For the future, use <b>-acak + possessive</b>: <i>gideceğimiz yer</i> (the place we will go).'],
+x:[['Dün tanıştığım adam doktormuş.','The man I met yesterday turns out to be a doctor.'],['Burada çalışan herkes Türkçe biliyor.','Everyone who works here knows Turkish.'],['Yarın gideceğimiz restoran çok ünlü.','The restaurant we are going to tomorrow is very famous.']],
+p:'Avoid the Persian-style "o kitap ki okudum" or splitting into two sentences. Build one noun phrase with the suffix.',
+q:[['Dün ___ film çok güzeldi.','izlediğimiz','izleyen','izlemek','izledik'],['Kapıda ___ adam kim?','bekleyen','beklediği','beklemek','bekledik'],['Annemin ___ yemekleri çok özledim.','yaptığı','yapan','yaptığım','yapmak']]},
+{t:'İsim-fiil: -ma / -dık',e:'That-clauses: fact vs wish',
+w:'Every "I know that…", "I want him to…", "she said that…" depends on this choice.',
+r:['Facts, knowledge, saying, hearing → <b>-dığını</b>: <i>Geldiğini biliyorum.</i>','Future facts → <b>-acağını</b>: <i>Geleceğini söyledi.</i>','Wishes, orders, feelings about an action → <b>-masını</b>: <i>Gelmesini istiyorum.</i>'],
+x:[['Haklı olduğunu biliyorum.','I know you are right.'],['Erken gelmeni rica ettim.','I asked you to come early.'],['Taşınacaklarını duydum.','I heard they are going to move.']],
+p:'"İstiyorum ki gelsin" is understood but sounds translated. "Gelmesini istiyorum" is the natural form.',
+q:[['Annem erken ___ istiyor.','gelmemi','geldiğimi','geleceğimi','gelirim'],['Onun yalan ___ herkes biliyor.','söylediğini','söylemesini','söyleyen','söylemek'],['Yarın ___ söyledi.','geleceğini','gelmesini','gelen','gelince']]},
+{t:'Dolaylı soru: -ıp -madığı',e:'Indirect questions (whether, where, when)',
+w:'"I don\'t know whether…", "Do you know when…" come up in every real conversation and email.',
+r:['"Whether" = <b>verb-ıp verb-madığını</b>: <i>gelip gelmediğini</i>.','With a question word, use <b>-dığını / -acağını</b>: <i>Nerede oturduğunu bilmiyorum.</i>','The subject of the clause takes the genitive: <i>onun nereden geldiğini</i>.'],
+x:[['Gelip gelmeyeceğini sordum.','I asked whether he would come.'],['Ne zaman döneceğini bilmiyorum.','I don\'t know when she will return.'],['Kimin aradığını hatırlamıyorum.','I don\'t remember who called.']],
+p:'"Bilmiyorum gelecek mi" is fine in speech, but in writing use the full form: "Gelip gelmeyeceğini bilmiyorum."',
+q:[['Kapıyı kilitleyip ___ hatırlamıyorum.','kilitlemediğimi','kilitlemedim','kilitlemeyen','kilitlemek'],['Toplantının saat kaçta ___ biliyor musun?','başlayacağını','başlamasını','başlayan','başlar'],['___ geldiğini kimse görmedi.','Onun nereden','O nereden','Ona nereye','Onu nereden']]},
+{t:'Ettirgen çatı (causative)',e:'Getting something done, making someone do',
+w:'Services (haircut, repairs), instructions and emotions ("it made me laugh") all need the causative.',
+r:['Most verbs: <b>-dır/-dir/-dur/-dür</b> (or -tır… after a voiceless consonant): <i>yaptır, kestir, yıkat</i>.','After a vowel, or polysyllabic verbs ending in l/r: <b>-t</b>: <i>okut, beklet, oturt</i>.','Some short verbs: <b>-ır / -ar</b>: <i>pişir, çıkar, düşür</i>. Double causative: <i>yaptırt</i>.'],
+x:[['Saçımı kestirdim.','I had my hair cut.'],['Arabayı yıkattım.','I had the car washed.'],['Bu film beni çok güldürdü.','This film made me laugh a lot.']],
+p:'"Saçımı kestim" means you cut it yourself. Use the causative for anything someone else did for you.',
+q:[['Berbere gidip saçımı ___.','kestirdim','kestim','kesildi','kesiştim'],['Bu fıkra herkesi ___.','güldürdü','güldü','gülündü','gülüştü'],['Bulaşıkları çocuklara ___.','yıkattım','yıkadım','yıkandı','yıkanttım']]},
+{t:'Edilgen çatı (passive)',e:'Passive and impersonal "one does"',
+w:'News, rules, recipes and formal writing are full of passives. The impersonal passive ("one does not smoke here") is very Turkish.',
+r:['After a consonant: <b>-ıl</b>: <i>yapıldı, açıldı</i>.','After a vowel: <b>-n</b>: <i>okundu, beklendi</i>. After l: <b>-ın</b>: <i>bilindi, bulundu</i>.','Intransitive verbs make impersonal passives: <i>Burada sigara içilmez. Bu yoldan gidilir.</i>'],
+x:[['Köprü 1973\'te yapıldı.','The bridge was built in 1973.'],['Bu kitap çok okunuyor.','This book is widely read.'],['Bayramda büyüklerin eli öpülür.','At the holiday, one kisses the elders\' hands.']],
+p:'"… tarafından" (by …) is formal and news-like. In speech, prefer the active voice when you know who did it.',
+q:[['Mektup dün ___.','gönderildi','gönderdi','gönderttirdi','gönderişti'],['Müzede fotoğraf ___.','çekilmez','çekmez','çektirmez','çekişmez'],['Sonuçlar yarın ___.','açıklanacak','açıklayacak','açıklatacak','açıklaşacak']]},
+{t:'-mış ve -dı',e:'Evidential: heard, inferred, discovered',
+w:'Turkish marks how you know something. Using -dı for hearsay sounds like you witnessed it.',
+r:['<b>-dı</b>: you saw it or know it first-hand.','<b>-mış</b>: you heard it, inferred it, or just discovered it. Also used for stories and fairy tales.','<b>-mışmış</b> adds doubt ("supposedly"); <b>-(y)mış</b> on nouns: <i>hastaymış</i> (apparently ill).'],
+x:[['Ali dün gelmiş.','Ali came yesterday (I heard).'],['Aa, kar yağmış!','Oh, it has snowed! (just noticed)'],['Evvel zaman içinde bir padişah varmış.','Once upon a time there was a sultan.']],
+p:'When retelling news from someone else, switch to -mış. Staying in -dı makes it sound like you were there.',
+q:[['Komşudan duydum, Ayşe ___.','evlenmiş','evlendi','evlenecekti','evlenir'],['Sabah pencereden baktım: gece kar ___.','yağmış','yağdı mı','yağacak','yağsın'],['Kendi gözümle gördüm, kazayı o ___.','yaptı','yapmış','yaparmış','yapmışmış']]},
+{t:'Koşul: -sa, -saydı, -ırsa',e:'Conditionals: real, hypothetical, counterfactual',
+w:'Advice, regret and planning all need the right conditional. Mixing them is a common B1 → B2 marker.',
+r:['Real / likely: <b>-ırsa … -ır</b>: <i>Gelirsen görüşürüz.</i>','Hypothetical: <b>-sa … -ır</b>: <i>Zengin olsam ev alırım.</i>','Past counterfactual: <b>-saydı … -ırdı</b>: <i>Bilseydim gelirdim.</i> Wishes: <b>keşke + -sa / -saydı</b>.'],
+x:[['Vaktin olursa uğra.','Drop by if you have time.'],['Yerinde olsam kabul ederdim.','If I were you I would accept.'],['Keşke daha önce söyleseydin.','I wish you had said it earlier.']],
+p:'For the past, keep -dı in both halves: "Bilseydim gelirdim", not "Bilsem gelirdim".',
+q:[['Daha önce ___ sana yardım ederdim.','bilseydim','bilirsem','bilsem','biliyorsam'],['Keşke o gün seninle ___.','gelseydim','gelirdim','gelecektim','gelirsem'],['Yarın hava güzel ___ pikniğe gideriz.','olursa','olsaydı','olurdu','olduysa']]},
+{t:'Bileşik zamanlar',e:'Compound tenses: -ardı, -mıştı, -acaktı, -ıyordu',
+w:'Telling a story about your childhood, or explaining a plan that fell through, needs these.',
+r:['<b>-ardı</b>: used to / would (habitual past): <i>giderdik</i>.','<b>-mıştı</b>: had done: <i>başlamıştı</i>.','<b>-acaktı</b>: was going to (but didn\'t): <i>arayacaktım</i>. <b>-ıyordu</b>: was doing.'],
+x:[['Çocukken her yaz köye giderdik.','As kids we used to go to the village every summer.'],['Geldiğimde film başlamıştı.','When I arrived the film had started.'],['Seni arayacaktım ama unuttum.','I was going to call you but I forgot.']],
+p:'For childhood routines use -ardı, not -ıyordu: "Her pazar dedeme giderdik" is the natural form.',
+q:[['Çocukken her pazar dedemleri ___.','ziyaret ederdik','ziyaret edecektik','ziyaret etmiştik','ziyaret edeceğiz'],['Sinemaya vardığımızda film çoktan ___.','başlamıştı','başlardı','başlayacaktı','başlıyor'],['Sana mesaj ___ ama telefonum kapandı.','atacaktım','atardım','atmıştım','atıyorum']]},
+{t:'Kip: -malı, -abilir, -mış olmalı',e:'Obligation, possibility, deduction',
+w:'Giving advice, guessing and speculating politely.',
+r:['<b>-malı</b>: must, should. <b>-malıydı</b>: should have.','<b>-abilir</b>: can, may. <b>-amaz</b>: cannot. <b>-mamalı</b>: must not.','<b>-mış olmalı</b>: must have done. <b>-mış olabilir</b>: may have done.'],
+x:[['Daha erken yatmalısın.','You should go to bed earlier.'],['Ona söylemeliydin.','You should have told him.'],['Yolda trafik olmuş olmalı.','There must have been traffic on the way.']],
+q:[['Işıklar kapalı, evden ___.','çıkmış olmalılar','çıkmalılar','çıkabilirler mi','çıkacaklardı'],['Bunu bana daha önce ___.','söylemeliydin','söylemelisin','söyleyebilirsin','söylersin'],['Yarın kar ___, sıkı giyin.','yağabilir','yağmalı','yağmış olmalı','yağmalıydı']]},
+{t:'Zarf-fiiller: zaman',e:'Time clauses: while, when, before, after, until',
+w:'These suffixes replace "when/while/before/after" and make storytelling smooth.',
+r:['<b>-ken</b>: while. <b>-ınca / -dığında</b>: when.','<b>-madan önce</b>: before. <b>-dıktan sonra</b>: after.','<b>-ıncaya kadar</b>: until. <b>-alı / -dığından beri</b>: since.'],
+x:[['Yemek yerken televizyon izlemem.','I don\'t watch TV while eating.'],['Eve varınca beni ara.','Call me when you get home.'],['Uyumadan önce dişlerini fırçala.','Brush your teeth before you sleep.']],
+q:[['Ben duş ___ kapı çaldı.','alırken','alınca kadar','aldıktan önce','almadan sonra'],['Dışarı ___ önce ışıkları kapat.','çıkmadan','çıkınca','çıkarken','çıktıktan'],['Sen ___ kadar bekleyeceğim.','gelinceye','gelirken','geldikten','gelmeden']]},
+{t:'Dolaylı anlatım',e:'Reported speech',
+w:'Retelling what someone said is constant in family and work talk.',
+r:['Statements → <b>-dığını / -acağını söyledi</b>.','Commands and requests → <b>-masını söyledi / istedi</b>.','Questions → <b>-ıp -madığını sordu</b>. Direct quote: <b>"…" dedi</b> or <b>"…" diye</b>.'],
+x:[['Yarın geleceğini söyledi.','He said he would come tomorrow.'],['Bana beklememi söyledi.','She told me to wait.'],['Hazır olup olmadığımı sordu.','He asked whether I was ready.']],
+q:[['Patron: "Raporu bitir!" → Patron raporu ___ söyledi.','bitirmemi','bitirdiğimi','bitireceğimi','bitirmek'],['Ali: "Yorgunum." → Ali yorgun ___ söyledi.','olduğunu','olmasını','olacağını','olan'],['Annem: "Aç mısın?" → Annem aç olup ___ sordu.','olmadığımı','olmadığım','olmamamı','olmasın']]},
+{t:'Emir ve istek kipleri',e:'Let him…, let\'s…, shall I…, come on…',
+w:'Hospitality, planning and family life run on these forms.',
+r:['3rd person: <b>-sın / -sınlar</b>: <i>Gelsin, otursunlar.</i>','Let\'s: <b>-alım</b>. Shall I?: <b>-ayım mı?</b>','Insistent or friendly nudge: <b>-sana / -sene</b>: <i>Gelsene!</i> Polite: <b>-ır mısınız / -abilir misiniz</b>.'],
+x:[['Biraz daha çay koyayım mı?','Shall I pour you a bit more tea?'],['Bekletmeyelim, hemen başlayalım.','Let\'s not keep them waiting, let\'s start now.'],['Otursana, ayakta kaldın.','Sit down, you\'re still standing.']],
+q:[['(Shall I make tea?) Çay ___ mı?','yapayım','yaparım','yapsın','yapsana'],['Ahmet içeri ___, ben müsaitim.','gelsin','gelsene','gelelim','geleyim'],['Hadi, sen de bize ___!','katılsana','katılsın','katılayım','katılalım']]},
+{t:'"ki" in three roles',e:'Conjunction ki, suffix -ki, pronoun -ki',
+w:'A favourite mistake in writing. Spelling it right is an instant signal of educated Turkish.',
+r:['Conjunction <b>ki</b> (that, so … that) is written separately: <i>Öyle yorgunum ki…</i>','Suffix <b>-ki</b> makes adjectives from place and time: <i>evdeki, bugünkü, dünkü</i> (attached).','Pronoun <b>-ki</b>: <i>benimki, seninki</i> (mine, yours), attached.'],
+x:[['Masadaki kitap benim.','The book on the table is mine.'],['Bugünkü toplantı iptal.','Today\'s meeting is cancelled.'],['O kadar güldük ki karnımız ağrıdı.','We laughed so much that our stomachs hurt.']],
+p:'Note the vowel exceptions: bugünkü, dünkü, öbürkü. Also "-ki" never changes in harmony otherwise: masadaki, evdeki.',
+q:[['___ toplantı iptal edildi.','Bugünkü','Bugün ki','Bugünki','Bugünkı'],['___ kitap kimin?','Masadaki','Masada ki','Masadakı','Masadeki'],['Öyle çok yağmur yağdı ___ yollar kapandı.','ki','ise','diye','dahi']]},
+{t:'Yazım: de/da, mi',e:'Spelling: particles vs suffixes',
+w:'Heritage writers mix these more than any other point. They matter in every message you type.',
+r:['"Also / too" <b>de/da</b> is written <b>separately</b>: <i>Ben de geliyorum.</i> Test: remove it and the sentence still works.','Locative <b>-de/-da/-te/-ta</b> is <b>attached</b>: <i>evde, çantamda, kitapta</i>.','The question particle <b>mi</b> is always separate and follows vowel harmony: <i>Geliyor musun?</i>'],
+x:[['Sen de mi biliyordun?','Did you know too?'],['Anahtarlar çantamda.','The keys are in my bag.'],['Yarın müsait misiniz?','Are you available tomorrow?']],
+q:[['Choose the correct sentence: ___','Ben de seninle geliyorum.','Bende seninle geliyorum.','Ben\'de seninle geliyorum.','Bende, seninle geliyorum.'],['Choose the correct sentence: ___','Kitap çantamda.','Kitap çantam da.','Kitap çantam\'da.','Kitap çantamde.'],['Choose the correct sentence: ___','Yarın geliyor musun?','Yarın geliyormusun?','Yarın geliyor misin?','Yarın geliyor mısın?']]},
+{t:'Resmî yazı dili',e:'Formal written Turkish: -mektedir, -dır, -mıştır',
+w:'Official letters, news and academic texts use their own verb endings. Recognising and using them unlocks formal Turkish.',
+r:['<b>-mektedir</b>: formal present progressive: <i>Çalışmalar sürmektedir.</i>','<b>-dır</b>: general truth or firm statement: <i>Sigara zararlıdır.</i>','<b>-mıştır / -acaktır</b>: completed or announced action: <i>Toplantı ertelenmiştir.</i>'],
+x:[['Çalışmalar devam etmektedir.','Work is continuing.'],['Sonuçlar yarın açıklanacaktır.','The results will be announced tomorrow.'],['Başvurunuz alınmıştır.','Your application has been received.']],
+p:'Don\'t use these in conversation: "Ben şu an yemek yemekteyim" sounds like a news broadcast.',
+q:[['Projeyle ilgili çalışmalar hâlâ ___.','sürmektedir','sürüyorduk','sürsün','sürmüşmüş'],['Toplantı ileri bir tarihe ___.','ertelenmiştir','ertelemişim','ertelensin','ertelendi mi'],['Düzenli spor sağlık için ___.','faydalıdır','faydalıymışım','faydalısın','faydalı mı']]}
+];
+
+const INT=[0,1,3,7,16,35],NEWMAX=10;
+const ITEMS=[];
+for(const c in RAW)RAW[c].trim().split('\n').forEach((l,i)=>{const[tr,en,ex,lv]=l.split('|');ITEMS.push({id:c+i,c,r:i,tr,en,ex,lv,ans:(ex.match(/\{(.+?)\}/)||[,tr])[1]})});
+const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+let st={};try{st=JSON.parse(localStorage.getItem('tdz')||'{}')}catch(e){}
+st.p=st.p||{};st.m=st.m||{day:0,nw:0,last:0,streak:0};st.cats=(st.cats||Object.keys(CATS)).filter(k=>CATS[k]);st.g=st.g||{};
+if(!st.cats.includes('r')&&!st.rAdded){st.cats.push('r')}st.rAdded=1;
+const save=()=>{try{localStorage.setItem('tdz',JSON.stringify(st))}catch(e){}};
+if(st.m.day!==today()){st.m.day=today();st.m.nw=0}
+const $=id=>document.getElementById(id);
+const exHTML=(ex,blank)=>esc(ex).replace(/\{(.+?)\}/,(_,w)=>blank?'<mark>_____</mark>':'<mark>'+w+'</mark>');
+const dots=id=>{const p=st.p[id];return p?'●'.repeat(p.box)+'○'.repeat(5-p.box):'new'};
+let voice=null;const canSpeak='speechSynthesis' in window;
+const speak=t=>{try{const u=new SpeechSynthesisUtterance(t.replace(/[…{}]/g,' '));u.lang='tr-TR';if(voice)u.voice=voice;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+if(canSpeak){const pick=()=>{voice=speechSynthesis.getVoices().find(v=>/^tr/i.test(v.lang))||null};pick();speechSynthesis.onvoiceschanged=pick}
+$('foot').textContent+=` ${ITEMS.length} items and ${G.length} grammar topics across B1–C2.`;
+
+/* ---- session ---- */
+let queue=[],cur=null,shown=false;
+function build(){
+  const t=today(),sel=ITEMS.filter(i=>st.cats.includes(i.c));
+  const rev=sel.filter(i=>st.p[i.id]&&st.p[i.id].due<=t).sort((a,b)=>st.p[a.id].box-st.p[b.id].box);
+  const room=Math.max(0,NEWMAX-st.m.nw);
+  const fresh=sel.filter(i=>!st.p[i.id]).sort((a,b)=>(a.r+1)/CATS[a.c].w-(b.r+1)/CATS[b.c].w).slice(0,room);
+  queue=[...rev,...fresh];next();
+}
+function next(){cur=queue.shift()||null;shown=false;drawCard();stats()}
+function drawCard(){
+  const box=$('cardBox');
+  if(!cur){box.innerHTML=`<div class="card"><svg class="ros"><use href="#ros"/></svg><div class="empty"><h2>Bugünlük bu kadar</h2><p>Nothing due in the selected categories. Try a grammar topic, take the quiz, or write a few sentences with today's words.</p><div class="row" style="justify-content:center"><a class="btn pri" href="#dilbilgisi">Grammar</a><button class="btn" id="more">5 more new cards</button></div></div></div>`;
+    $('more').onclick=()=>{st.m.nw=Math.max(0,st.m.nw-5);save();build()};return}
+  const c=CATS[cur.c],nb=Math.min(5,(st.p[cur.id]?.box||0)+1);
+  box.innerHTML=`<div class="card flip"><svg class="ros"><use href="#ros"/></svg>
+  <div class="meta"><span class="tag lv">${cur.lv}</span><span class="tag">${c.n} · ${c.e}</span><span class="tag">${st.p[cur.id]?'review':'new'}</span><span>${queue.length} left</span></div>
+  <p class="term">${esc(cur.tr)}</p>
+  ${shown?`<p class="en">${esc(cur.en)}</p><p class="ex">${exHTML(cur.ex)}</p>
+  <div class="row"><button class="btn again" data-g="0">Tekrar<small>1 · again</small></button><button class="btn" data-g="1">Zor<small>2 · tomorrow</small></button><button class="btn ok" data-g="2">Biliyorum<small>3 · ${INT[nb]} day${INT[nb]>1?'s':''}</small></button>${canSpeak?'<button class="btn" id="say">Dinle</button>':''}</div>`
+  :`<p class="hint">Say the meaning to yourself, or use it in a sentence, before you reveal.</p><div class="row"><button class="btn pri" id="rev">Göster · reveal</button>${canSpeak?'<button class="btn" id="say">Dinle</button>':''}</div>`}</div>`;
+  const s=$('say');if(s)s.onclick=()=>speak(shown?cur.ex:cur.tr);
+  const r=$('rev');if(r)r.onclick=()=>{shown=true;drawCard()};
+  box.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>grade(+b.dataset.g));
+}
+function grade(g){
+  const t=today(),p=st.p[cur.id];
+  if(!p)st.m.nw++;
+  const box=p?p.box:0;
+  if(g===0){st.p[cur.id]={box:0,due:t};queue.splice(Math.min(3,queue.length),0,cur)}
+  else if(g===1)st.p[cur.id]={box:Math.max(1,box),due:t+1};
+  else{const nb=Math.min(5,box+1);st.p[cur.id]={box:nb,due:t+INT[nb]}}
+  if(st.m.last!==t){st.m.streak=st.m.last===t-1?st.m.streak+1:1;st.m.last=t}
+  save();next();
+}
+function stats(){
+  const t=today();
+  $('sDue').textContent=queue.length+(cur?1:0);
+  $('sLearn').textContent=ITEMS.filter(i=>st.p[i.id]&&st.p[i.id].box>=2).length;
+  $('sStreak').textContent=st.m.last>=t-1?st.m.streak:0;
+  $('bars').innerHTML=Object.entries(CATS).map(([k,c])=>{const all=ITEMS.filter(i=>i.c===k),l=all.filter(i=>st.p[i.id]&&st.p[i.id].box>=2).length;return`<div class="b"><span>${c.e} <em>· ${c.w}%</em></span><span class="n">${l}/${all.length}</span><span class="t"><i style="width:${l/all.length*100}%"></i></span></div>`}).join('');
+}
+function chips(el,onch){
+  el.innerHTML=Object.entries(CATS).map(([k,c])=>`<button class="chip" data-c="${k}" aria-pressed="${st.cats.includes(k)}">${c.n}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const k=b.dataset.c;st.cats=st.cats.includes(k)?st.cats.filter(x=>x!==k):[...st.cats,k];if(!st.cats.length)st.cats=[k];save();document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',st.cats.includes(x.dataset.c)));onch()});
+}
+document.addEventListener('keydown',e=>{
+  if($('v-calis').hidden||!cur||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.code==='Space'&&!shown){e.preventDefault();shown=true;drawCard()}
+  else if(shown&&['1','2','3'].includes(e.key))grade(+e.key-1);
+});
+
+/* ---- writing ---- */
+function wPick(){
+  const pool=ITEMS.filter(i=>st.p[i.id]);const src=pool.length>=3?pool:ITEMS.filter(i=>i.c==='b'||i.c==='y');
+  $('wPrompt').innerHTML='Use these in two or three sentences of your own: '+shuf(src).slice(0,3).map(i=>`<mark>${esc(i.tr)}</mark>`).join(', ');
+}
+try{$('wText').value=localStorage.getItem('tdz-w')||''}catch(e){}
+$('wText').oninput=e=>{try{localStorage.setItem('tdz-w',e.target.value)}catch(_){}};
+$('wNew').onclick=wPick;
+$('reset').onclick=()=>{$('dlg').innerHTML=`<div class="dlg"><div><h3>Reset all progress?</h3><p>Every card goes back to new and grammar scores are cleared. This can't be undone.</p><div class="row"><button class="btn again" id="yes">Reset</button><button class="btn" id="no">Cancel</button></div></div></div>`;
+  $('no').onclick=()=>$('dlg').innerHTML='';$('yes').onclick=()=>{st.p={};st.g={};st.m={day:today(),nw:0,last:0,streak:0};save();$('dlg').innerHTML='';build();renderList();drawToc()}};
+
+/* ---- grammar ---- */
+let gi=0;
+function drawToc(){
+  $('toc').innerHTML=G.map((g,i)=>`<button data-i="${i}"${i===gi?' aria-current="true"':''}><span class="ck">${st.g[i]===g.q.length?'✓':st.g[i]!=null?'·':''}</span><span>${esc(g.t)}</span></button>`).join('');
+  $('toc').querySelectorAll('button').forEach(b=>b.onclick=()=>{gi=+b.dataset.i;drawToc();drawG();if(innerWidth<820)$('gBox').scrollIntoView({behavior:'smooth'})});
+}
+function drawG(){
+  const g=G[gi],ans={};
+  const qs=g.q.map(q=>({p:q[0],ok:q[1],o:shuf(q.slice(1))}));
+  $('gBox').innerHTML=`<div class="card gcard flip"><svg class="ros"><use href="#ros"/></svg>
+  <div class="meta"><span class="tag lv">Konu ${gi+1} / ${G.length}</span>${st.g[gi]!=null?`<span>Best: ${st.g[gi]} / ${g.q.length}</span>`:''}</div>
+  <h2>${esc(g.t)}</h2><p class="sub">${esc(g.e)}</p>
+  <p>${esc(g.w)}</p>
+  <h3>Kural · the rule</h3><ul>${g.r.map(x=>`<li>${x}</li>`).join('')}</ul>
+  <h3>Örnekler · examples</h3><ul class="exl">${g.x.map(([tr,en])=>`<li>${esc(tr)}<span>${esc(en)}</span></li>`).join('')}</ul>
+  ${g.p?`<div class="trap"><b>Dikkat:</b> ${esc(g.p)}</div>`:''}
+  <div class="drill"><h3>Alıştırma · drill</h3>${qs.map((q,qi)=>`<div class="dq" data-q="${qi}"><p>${qi+1}. ${esc(q.p).replace('___','<mark>_____</mark>')}</p><div class="opts">${q.o.map((o,oi)=>`<button class="opt" data-o="${oi}">${esc(o)}</button>`).join('')}</div></div>`).join('')}<div id="gRes"></div></div>
+  <div class="row">${gi>0?'<button class="btn" id="gPrev">← Previous</button>':''}${gi<G.length-1?'<button class="btn pri" id="gNext">Next topic →</button>':''}</div></div>`;
+  $('gBox').querySelectorAll('.dq').forEach(d=>{const q=qs[+d.dataset.q];d.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const ok=q.o[+b.dataset.o]===q.ok;ans[d.dataset.q]=ok;
+    d.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(q.o[+x.dataset.o]===q.ok)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+    if(Object.keys(ans).length===qs.length){const s=Object.values(ans).filter(Boolean).length;st.g[gi]=Math.max(st.g[gi]??0,s);save();drawToc();
+      $('gRes').innerHTML=`<p class="hint" style="font-size:16px"><b>${s} / ${qs.length}</b> · ${s===qs.length?'Mükemmel.':'Re-read the rule above, then try again.'} <button class="btn" id="gAgain" style="display:inline-flex;margin-left:8px">Try again</button></p>`;$('gAgain').onclick=drawG}
+  })});
+  const pv=$('gPrev'),nx=$('gNext');if(pv)pv.onclick=()=>{gi--;drawToc();drawG();$('gBox').scrollIntoView()};if(nx)nx.onclick=()=>{gi++;drawToc();drawG();$('gBox').scrollIntoView()};
+}
+
+/* ---- quiz ---- */
+let qs=[],qi=0,score=0;
+function startQuiz(){
+  const sel=ITEMS.filter(i=>st.cats.includes(i.c)),seen=sel.filter(i=>st.p[i.id]);
+  const base=shuf(seen.length>=10?seen:sel).slice(0,10);
+  qs=base.map(it=>{const d=shuf(ITEMS.filter(x=>x.c===it.c&&x.id!==it.id&&x.ans.toLowerCase()!==it.ans.toLowerCase())).slice(0,3);return{it,opts:shuf([it,...d])}});
+  qi=0;score=0;drawQ();
+}
+function drawQ(){
+  const box=$('quizBox');
+  if(qi>=qs.length){box.innerHTML=`<div class="card"><svg class="ros"><use href="#ros"/></svg><div class="empty"><h2>${score} / ${qs.length}</h2><p>${score>=8?'Harika. These are sticking.':score>=5?'İyi gidiyor. Missed items are back in today\'s reviews.':'Keep going: the deck will bring these back.'}</p><div class="row" style="justify-content:center"><button class="btn pri" id="again">New quiz</button></div></div></div>`;$('again').onclick=startQuiz;return}
+  const {it,opts}=qs[qi];
+  box.innerHTML=`<div class="card flip"><svg class="ros"><use href="#ros"/></svg><div class="meta"><span class="tag lv">${it.lv}</span><span class="tag">${CATS[it.c].n}</span><span>Question ${qi+1} of ${qs.length} · score ${score}</span></div>
+  <p class="term" style="font-size:clamp(24px,4vw,34px);color:var(--ink)">${exHTML(it.ex,true)}</p><p class="hint">Fill the gap with the right form.</p>
+  <div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.ans.toLocaleLowerCase('tr'))}</button>`).join('')}</div><div id="fb"></div></div>`;
+  box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const ok=opts[+b.dataset.i]===it;if(ok)score++;
+    box.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(opts[+x.dataset.i]===it)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+    if(!ok&&st.p[it.id]){st.p[it.id]={box:0,due:today()};save()}
+    $('fb').innerHTML=`<p class="ex" style="margin-top:18px">${exHTML(it.ex)}</p><p class="hint"><b>${esc(it.tr)}</b>: ${esc(it.en)}${!ok&&st.p[it.id]?' · moved back to today\'s reviews':''}</p><div class="row"><button class="btn pri" id="nq">${qi+1<qs.length?'Next':'See score'}</button></div>`;
+    $('nq').onclick=()=>{qi++;drawQ()};$('nq').focus();
+  });
+}
+
+/* ---- list ---- */
+$('fCat').innerHTML='<option value="">All categories</option>'+Object.entries(CATS).map(([k,c])=>`<option value="${k}">${c.n} · ${c.e}</option>`).join('');
+function renderList(){
+  const q=$('q').value.trim().toLocaleLowerCase('tr'),c=$('fCat').value,l=$('fLv').value;
+  const rows=ITEMS.filter(i=>(!c||i.c===c)&&(!l||i.lv===l)&&(!q||(i.tr+' '+i.en+' '+i.ex).toLocaleLowerCase('tr').includes(q)));
+  $('count').textContent=rows.length+' of '+ITEMS.length+' items';
+  $('tb').innerHTML=rows.length?rows.map(i=>`<tr><td class="tr">${esc(i.tr)}</td><td>${esc(i.en)}</td><td>${exHTML(i.ex)}</td><td>${i.lv}</td><td class="dots">${dots(i.id)}</td></tr>`).join(''):'<tr><td colspan="5">No matches. Try fewer letters or another category.</td></tr>';
+}
+['q','fCat','fLv'].forEach(id=>$(id).addEventListener('input',renderList));
+
+/* ---- routing ---- */
+const views=['calis','dilbilgisi','test','liste','neden'];
+function route(){
+  const v=views.includes(location.hash.slice(1))?location.hash.slice(1):'calis';
+  views.forEach(x=>$('v-'+x).hidden=x!==v);
+  document.querySelectorAll('#nav a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  if(v==='test'&&!qs.length)startQuiz();if(v==='liste')renderList();
+}
+window.addEventListener('hashchange',route);
+$('newMax').textContent=NEWMAX;
+chips($('catChips'),build);chips($('qChips'),startQuiz);
+build();wPick();drawToc();drawG();route();save();
+}
+</script>
+</body>
+</html>
