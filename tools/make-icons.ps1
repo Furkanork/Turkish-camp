@@ -60,6 +60,29 @@ Save-Icon 512 0.31 'icon-maskable-512.png'
 Save-Icon 180 0.36 'apple-touch-icon.png'
 Save-Icon 64  0.44 'favicon-64.png'
 
+# favicon.ico (16, 32, 48 px PNGs packed into one .ico) in the site root
+$pngs = @()
+foreach ($sz in 16, 32, 48) {
+  $c = New-Canvas $sz $sz; $bmp = $c[0]; $g = $c[1]
+  Draw-Rosette $g ($sz/2) ($sz/2) (($sz * 0.46) / 48) $true $false
+  $ms = New-Object System.IO.MemoryStream
+  $bmp.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png)
+  $pngs += ,@($sz, $ms.ToArray())
+  $g.Dispose(); $bmp.Dispose()
+}
+$ico = New-Object System.IO.MemoryStream
+$w = New-Object System.IO.BinaryWriter $ico
+$w.Write([UInt16]0); $w.Write([UInt16]1); $w.Write([UInt16]$pngs.Count)
+$offset = 6 + 16 * $pngs.Count
+foreach ($p in $pngs) {
+  $w.Write([byte]$p[0]); $w.Write([byte]$p[0]); $w.Write([byte]0); $w.Write([byte]0)
+  $w.Write([UInt16]1); $w.Write([UInt16]32); $w.Write([UInt32]$p[1].Length); $w.Write([UInt32]$offset)
+  $offset += $p[1].Length
+}
+foreach ($p in $pngs) { $w.Write([byte[]]$p[1]) }
+$w.Flush()
+[System.IO.File]::WriteAllBytes((Join-Path (Split-Path $Out -Parent) 'favicon.ico'), $ico.ToArray())
+
 # share preview 1200x630
 $c = New-Canvas 1200 630; $bmp = $c[0]; $g = $c[1]
 $band = New-Object System.Drawing.SolidBrush $deep

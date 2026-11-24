@@ -1,7 +1,7 @@
 // Offline support for Türkçe Derinlik.
 // The page is fetched network-first so updates arrive as soon as you're online;
 // everything else (icons, fonts) is served from the cache.
-const CACHE = 'derinlik-v1';
+const CACHE = 'derinlik-v2';
 const CORE = [
   './',
   'index.html',
@@ -9,7 +9,8 @@ const CORE = [
   'icons/icon-192.png',
   'icons/icon-512.png',
   'icons/apple-touch-icon.png',
-  'icons/favicon-64.png'
+  'favicon.ico',
+  'favicon.svg'
 ];
 
 self.addEventListener('install', e => {

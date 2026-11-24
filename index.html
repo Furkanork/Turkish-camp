@@ -7,7 +7,8 @@
 <meta name="description" content="B2–C2 Turkish for heritage speakers: spaced-repetition flashcards, grammar drills and an Istanbul accent trainer.">
 <meta name="theme-color" content="#1b3a8a">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,13 +30,16 @@
    PICTURE: the live flashcard itself, large, with a rosette in its corner; tile frieze under the header
    COLOUR and TYPE: cobalt dominant, turquoise support, İznik red accent; white by day, deep indigo by night; Literata + Work Sans
    LAYOUT: modest title, tabs, the card first; grammar, library and rationale behind their tabs */
-:root{color-scheme:light dark;
---bg:light-dark(#ffffff,#0a1024);--ink:light-dark(#121a33,#eef1fb);--mut:light-dark(#56607a,#a3adc9);
---co:light-dark(#1b3a8a,#9db8ff);--fill:light-dark(#1b3a8a,#3b63d9);--on:#ffffff;
---tq:light-dark(#138a82,#4fd1c5);--tqf:light-dark(#138a82,#1d9c91);
---rd:light-dark(#c4122f,#ff7a8c);--tile:light-dark(#f3f6fd,#131c3a);--ln:light-dark(#d9e0f0,#26345f);
---hd:light-dark(#1b3a8a,#14275f);--hd2:light-dark(#142d6e,#0f1d4a)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+/* plain variables (light-dark() is missing on older phones, which left text invisible) */
+:root{color-scheme:light;--on:#ffffff;
+--bg:#ffffff;--ink:#121a33;--mut:#56607a;--co:#1b3a8a;--fill:#1b3a8a;--tq:#138a82;--tqf:#138a82;--rd:#c4122f;--tile:#f3f6fd;--ln:#d9e0f0;--hd:#1b3a8a;--hd2:#142d6e;
+--tqs:#dff1ef;--rds:#fbe3e7}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;
+--bg:#0a1024;--ink:#eef1fb;--mut:#a3adc9;--co:#9db8ff;--fill:#3b63d9;--tq:#4fd1c5;--tqf:#1d9c91;--rd:#ff7a8c;--tile:#131c3a;--ln:#26345f;--hd:#14275f;--hd2:#0f1d4a;
+--tqs:#123a45;--rds:#3a1a33}}
+:root[data-theme=dark]{color-scheme:dark;
+--bg:#0a1024;--ink:#eef1fb;--mut:#a3adc9;--co:#9db8ff;--fill:#3b63d9;--tq:#4fd1c5;--tqf:#1d9c91;--rd:#ff7a8c;--tile:#131c3a;--ln:#26345f;--hd:#14275f;--hd2:#0f1d4a;
+--tqs:#123a45;--rds:#3a1a33}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Work Sans",system-ui,sans-serif;overflow-x:clip}
 h1,h2,h3{font-family:Literata,Georgia,serif;font-weight:700;line-height:1.1;text-wrap:balance;margin:0}
@@ -67,8 +71,8 @@ section[hidden]{display:none}
 .ansrow input{flex:1 1 220px;font:inherit;font-size:18px;padding:10px 14px;min-height:48px;border-radius:12px;border:2px solid var(--ln);background:var(--bg);color:var(--ink)}
 .ansrow input:focus{border-color:var(--co);outline:none}
 .res{margin-top:16px;padding:10px 14px;border-radius:12px;font-size:16px}
-.res.good{background:color-mix(in srgb,var(--tq) 18%,var(--bg));border:1px solid var(--tq)}
-.res.bad{background:color-mix(in srgb,var(--rd) 12%,var(--bg));border:1px solid var(--rd)}
+.res.good{background:var(--tqs);border:1px solid var(--tq)}
+.res.bad{background:var(--rds);border:1px solid var(--rd)}
 .res s{color:var(--mut)}
 .prompt{font:500 clamp(20px,3vw,26px)/1.3 Literata,serif;margin:0 0 12px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
@@ -105,8 +109,8 @@ textarea{min-height:130px;resize:vertical}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
 .opt{min-height:52px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font-size:16px}
 .opt:hover:not(:disabled){border-color:var(--co)}
-.opt.right{border-color:var(--tq);background:color-mix(in srgb,var(--tq) 20%,var(--bg))}
-.opt.wrong{border-color:var(--rd);background:color-mix(in srgb,var(--rd) 16%,var(--bg))}
+.opt.right{border-color:var(--tq);background:var(--tqs)}
+.opt.wrong{border-color:var(--rd);background:var(--rds)}
 .filters{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,.8fr);gap:10px;margin-bottom:6px}
 table{width:100%;border-collapse:collapse;font-size:15px}
 th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--ln);vertical-align:top}
@@ -125,7 +129,7 @@ td.tr{font-weight:600;color:var(--co)}
 .gcard ul{margin:0;padding-left:1.2em}.gcard li{margin:4px 0}
 .exl{list-style:none;padding:0!important}.exl li{border-left:3px solid var(--tq);padding:2px 0 2px 12px;margin:8px 0}
 .exl span{display:block;color:var(--mut);font-size:14px}
-.trap{background:color-mix(in srgb,var(--rd) 9%,var(--bg));border:1px solid color-mix(in srgb,var(--rd) 35%,var(--ln));border-radius:12px;padding:12px 16px;margin-top:18px;font-size:15px}
+.trap{background:var(--rds);border:1px solid var(--rd);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:15px}
 .drill{border-top:1px solid var(--ln);margin-top:24px;padding-top:6px}
 .dq{margin:16px 0}.dq p{margin:0;font-size:17px}
 .dq .opts{margin-top:10px}
@@ -141,8 +145,8 @@ td.tr{font-weight:600;color:var(--co)}
 .pw small{color:var(--mut);font-size:13px}
 .syls{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0}
 .syl{min-width:64px;min-height:56px;padding:8px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font:600 24px/1 Literata,serif}
-.syl.right{border-color:var(--tq);background:color-mix(in srgb,var(--tq) 20%,var(--bg))}
-.syl.wrong{border-color:var(--rd);background:color-mix(in srgb,var(--rd) 16%,var(--bg))}
+.syl.right{border-color:var(--tq);background:var(--tqs)}
+.syl.wrong{border-color:var(--rd);background:var(--rds)}
 .shl{list-style:none;padding:0;margin:0;display:grid;gap:14px}
 .shl li{background:var(--tile);border:1px solid var(--ln);border-radius:14px;padding:16px}
 .shl .s{font:500 20px/1.4 Literata,serif;margin:0 0 4px}
@@ -856,7 +860,10 @@ $('foot').textContent+=` ${ITEMS.length} items and ${G.length} grammar topics ac
 
 /* ---- session ---- */
 let queue=[],cur=null,shown=false;
+/* a category/level change in one tab marks the other tab for a rebuild */
+const dirty={p:false,q:false};
 function build(){
+  dirty.p=false;
   const t=today(),sel=ITEMS.filter(i=>st.cats.includes(i.c));
   const rev=sel.filter(i=>st.p[i.id]&&st.p[i.id].due<=t).sort((a,b)=>st.p[a.id].box-st.p[b.id].box);
   const room=Math.max(0,NEWMAX-st.m.nw);
@@ -887,11 +894,14 @@ function drawCard(){
   box.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>grade(+b.dataset.g));
 }
 let res=null;const finePtr=matchMedia('(pointer: fine)').matches;
-const norm=s=>s.toLocaleLowerCase('tr').replace(/[âá]/g,'a').replace(/î/g,'i').replace(/û/g,'u').replace(/[.,!?;:"'’“”—–\-]/g,' ').replace(/\s+/g,' ').trim();
+/* apostrophes are dropped (Hollanda'da = Hollandada), other punctuation becomes a space */
+const norm=s=>s.normalize('NFC').toLocaleLowerCase('tr').replace(/['’‘`]/g,'').replace(/[âá]/g,'a').replace(/î/g,'i').replace(/û/g,'u').replace(/[.,!?;:"“”«»—–\-]/g,' ').replace(/\s+/g,' ').trim();
+const fold=s=>s.replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ç/g,'c').replace(/ö/g,'o').replace(/ü/g,'u');
 const lev=(a,b)=>{const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]};
-function check(given,ans){const g=norm(given),a=norm(ans);return{given,ok:g===a,near:g!==a&&a.length>4&&lev(g,a)<=1}}
+function check(given,ans){const g=norm(given),a=norm(ans),ok=g===a,letters=!ok&&fold(g)===fold(a);return{given,ok,letters,near:!ok&&!letters&&a.length>4&&lev(g,a)<=1}}
 function resHTML(r,ans){if(!r)return'<div class="res bad">Not answered. Answer: <b>'+esc(ans)+'</b></div>';
-  return r.ok?`<div class="res good">Doğru: <b>${esc(r.given)}</b></div>`:`<div class="res bad">${r.near?'Neredeyse (one letter off)':'Yanlış'}: <s>${esc(r.given)}</s> → <b>${esc(ans)}</b></div>`}
+  if(r.ok)return`<div class="res good">Doğru: <b>${esc(r.given)}</b></div>`;
+  return`<div class="res bad">${r.letters?'Right word, wrong Turkish letters (ı ş ğ ç ö ü)':r.near?'Neredeyse (one letter off)':'Yanlış'}: <s>${esc(r.given)}</s> → <b>${esc(ans)}</b></div>`}
 function grade(g){
   const t=today(),p=st.p[cur.id];
   if(!p)st.m.nw++;
@@ -911,7 +921,7 @@ function stats(){
 }
 function chips(el,onch){
   el.innerHTML=Object.entries(CATS).map(([k,c])=>`<button class="chip" data-c="${k}" aria-pressed="${st.cats.includes(k)}">${c.n}</button>`).join('');
-  el.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const k=b.dataset.c;st.cats=st.cats.includes(k)?st.cats.filter(x=>x!==k):[...st.cats,k];if(!st.cats.length)st.cats=[k];save();document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',st.cats.includes(x.dataset.c)));onch()});
+  el.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const k=b.dataset.c;st.cats=st.cats.includes(k)?st.cats.filter(x=>x!==k):[...st.cats,k];if(!st.cats.length)st.cats=[k];save();document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',st.cats.includes(x.dataset.c)));dirty.p=dirty.q=true;onch()});
 }
 document.addEventListener('keydown',e=>{
   if($('v-calis').hidden||!cur||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
@@ -960,6 +970,7 @@ function drawG(){
 /* ---- quiz ---- */
 let qs=[],qi=0,score=0;
 function startQuiz(){
+  dirty.q=false;
   let sel=ITEMS.filter(i=>st.cats.includes(i.c)&&lvOk(i));if(sel.length<10)sel=ITEMS.filter(i=>st.cats.includes(i.c));
   const seen=sel.filter(i=>st.p[i.id]);
   const base=shuf(seen.length>=10?seen:sel).slice(0,10);
@@ -1046,7 +1057,7 @@ const SH=[
 ];
 const RED=[['geliyorum','geliyom','I\'m coming'],['yapıyorsun','yapıyon','you\'re doing'],['ne yapıyorsun?','napıyon?','what are you up to?'],['yapacağım','yapcam','I\'ll do'],['gideceğiz','gitcez','we\'ll go'],['bir şey','bi şey','something'],['bir dakika','bi dakka','one minute'],['değil mi?','di mi?','isn\'t it?'],['hiçbir şey','hiçbişey','nothing'],['geliyor musun?','geliyo musun?','are you coming?'],['ağabey','abi','big brother'],['oğlum','oolum','my son / mate'],['ne oldu?','n\'oldu?','what happened?'],['bilmiyorum','bilmiyom','I don\'t know']];
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let tq=0,tScore=[0,0],recr=null,recUrl={};
+let tq=0,tScore=[0,0],recr=null,recLi=null,recUrl={};
 function tWords(ws){return`<div class="words">${ws.map(w=>{const[s,d,g]=w.split('|');return`<button class="pw" data-say="${esc(s)}">${esc(d)}${g?` <small>${esc(g)}</small>`:''}</button>`}).join('')}</div>`}
 function bindSay(root){root.querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(b.dataset.say))}
 function drawT(){
@@ -1076,7 +1087,8 @@ async function shAct(li,b){
   if(act==='play')return speak(s);
   if(act==='me'){if(recUrl[id])try{await new Audio(recUrl[id]).play()}catch(e){}return}
   if(act==='rec'){
-    if(recr&&recr.state==='recording'){recr.stop();return}
+    if(recr&&recr.state==='recording'){const same=recLi===li;recr.stop();if(same)return;await new Promise(r=>setTimeout(r,250))}
+    recLi=li;
     try{const strm=await navigator.mediaDevices.getUserMedia({audio:true});const ch=[];recr=new MediaRecorder(strm);
       recr.ondataavailable=e=>ch.push(e.data);
       recr.onstop=()=>{strm.getTracks().forEach(t=>t.stop());recUrl[id]=URL.createObjectURL(new Blob(ch,{type:recr.mimeType}));b.textContent='Kaydet · record';li.querySelector('[data-act="me"]').disabled=false;out.textContent='Recorded. Play yourself back, then the model, and compare.'};
@@ -1115,7 +1127,7 @@ function route(){
   const v=views.includes(location.hash.slice(1))?location.hash.slice(1):'calis';
   views.forEach(x=>$('v-'+x).hidden=x!==v);
   document.querySelectorAll('#nav a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
-  if(v==='test'&&!qs.length)startQuiz();if(v==='liste')renderList();if(v==='telaffuz'&&st.tp!=='golge')drawT();
+  if(v==='calis'&&dirty.p)build();if(v==='test'&&(!qs.length||dirty.q))startQuiz();if(v==='liste')renderList();if(v==='telaffuz'&&st.tp!=='golge')drawT();
 }
 window.addEventListener('hashchange',route);
 $('newMax').textContent=NEWMAX;
@@ -1125,7 +1137,7 @@ function seg(el,key,opts,onch){
 }
 const LVO=[['B2','B2 +'],['C1','C1 +'],['C2','C2 only']];
 function segs(){
-  seg($('lvSeg'),'lv',LVO,()=>{segs();build()});seg($('lvSeg2'),'lv',LVO,()=>{segs();startQuiz()});
+  seg($('lvSeg'),'lv',LVO,()=>{segs();dirty.q=true;build()});seg($('lvSeg2'),'lv',LVO,()=>{segs();dirty.p=true;startQuiz()});
   seg($('dirSeg'),'dir',[['yaz','EN → TR · type'],['tani','TR → EN · recall']],()=>{segs();shown=false;res=null;drawCard()});
   seg($('qmSeg'),'qm',[['yaz','Type answer'],['sec','Multiple choice']],()=>{segs();startQuiz()});
 }
