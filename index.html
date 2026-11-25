@@ -105,6 +105,7 @@ textarea{min-height:130px;resize:vertical}
 .bars .b{display:grid;grid-template-columns:minmax(0,1fr) 3.5em;gap:2px 10px;margin:10px 0;font-size:14px}
 .bars .b em{font-style:normal;color:var(--mut)}
 .bars .t{grid-column:1/-1;height:8px;border-radius:4px;background:var(--ln);overflow:hidden}.bars .t i{display:block;height:100%;background:var(--tq)}
+.stats.pr{margin:14px 0}.strip{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin:8px 0 18px;max-width:420px}.strip i{aspect-ratio:1;border-radius:4px;background:var(--ln)}.strip i.on{background:var(--tq)}.strip i.today{outline:2px solid var(--mut);outline-offset:1px}
 .bars .n{text-align:right;font-variant-numeric:tabular-nums}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
 .opt{min-height:52px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font-size:16px}
@@ -175,7 +176,7 @@ footer{color:var(--mut);font-size:14px;border-top:1px solid var(--ln)}
 </div></div>
 <svg class="frieze" aria-hidden="true"><defs><pattern id="pt" width="44" height="44" patternUnits="userSpaceOnUse"><use href="#ros" x="4" y="4" width="36" height="36"/></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>
 </header>
-<nav><div class="wrap" id="nav"><a href="#calis">Çalış · Practise</a><a href="#dilbilgisi">Dilbilgisi · Grammar</a><a href="#telaffuz">Telaffuz · Accent</a><a href="#test">Test · Quiz</a><a href="#liste">Liste · Library</a><a href="#zayif">Zayıf · Weak spots</a><a href="#neden">Neden 80/20?</a></div></nav>
+<nav><div class="wrap" id="nav"><a href="#calis">Çalış · Practise</a><a href="#dilbilgisi">Dilbilgisi · Grammar</a><a href="#telaffuz">Telaffuz · Accent</a><a href="#test">Test · Quiz</a><a href="#liste">Liste · Library</a><a href="#zayif">Zayıf · Weak spots</a><a href="#gelisim">Gelişim · Progress</a><a href="#neden">Neden 80/20?</a></div></nav>
 
 <main>
 <section id="v-calis" class="band"><div class="wrap">
@@ -218,6 +219,12 @@ footer{color:var(--mut);font-size:14px;border-top:1px solid var(--ln)}
   <h2>Zayıf noktalar · Weak spots</h2>
   <p class="hint">Built from your own answers: every "Tekrar" or "Zor" on a card and every missed quiz question counts against that item. Nothing is sent anywhere.</p>
   <div id="wkBox"></div>
+</div></section>
+
+<section id="v-gelisim" class="band" hidden><div class="wrap">
+  <h2>Gelişim · Progress</h2>
+  <p class="hint">Your streak, what you learned each week and how far you are at each level. Stored only on this device.</p>
+  <div id="prBox"></div>
 </div></section>
 
 <section id="v-neden" class="band" hidden><div class="wrap prose">
@@ -1098,7 +1105,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
 let st={};try{st=JSON.parse(localStorage.getItem('tdz')||'{}')}catch(e){}
-st.p=st.p||{};st.ws=st.ws||{};st.m=st.m||{day:0,nw:0,last:0,streak:0};st.cats=(st.cats||Object.keys(CATS)).filter(k=>CATS[k]);st.g=st.g||{};
+st.p=st.p||{};st.ws=st.ws||{};st.m=st.m||{day:0,nw:0,last:0,streak:0};st.cats=(st.cats||Object.keys(CATS)).filter(k=>CATS[k]);st.g=st.g||{};st.act=st.act||{};
 if(!st.cats.includes('r')&&!st.rAdded){st.cats.push('r')}st.rAdded=1;
 if(!st.v3){for(const k of ['u','a'])if(!st.cats.includes(k))st.cats.push(k);st.v3=1}
 if(!st.v4){if(!st.cats.includes('e'))st.cats.push('e');st.v4=1}
@@ -1106,7 +1113,9 @@ st.lv=st.lv||'C1';st.dir=st.dir||'yaz';st.qm=st.qm||'yaz';
 const LV={B1:1,B2:2,C1:3,C2:4},lvOk=i=>LV[i.lv]>=LV[st.lv];
 const save=()=>{try{localStorage.setItem('tdz',JSON.stringify(st))}catch(e){}};
 /* per-item answer record for the weak-spots view: n = answers, m = misses (a "Zor" counts as half) */
-const rec=(id,miss)=>{const w=st.ws[id]||(st.ws[id]={n:0,m:0});w.n++;w.m+=miss}
+const rec=(id,miss)=>{const w=st.ws[id]||(st.ws[id]={n:0,m:0});w.n++;w.m+=miss;const a=st.act[today()]||(st.act[today()]={a:0,l:0});a.a++}
+/* a card reaching box 2 for the first time counts as 'learned' on that day */
+const learnedNow=()=>{const a=st.act[today()]||(st.act[today()]={a:0,l:0});a.l++}
 if(st.m.day!==today()){st.m.day=today();st.m.nw=0}
 const $=id=>document.getElementById(id);
 const exHTML=(ex,blank)=>esc(ex).replace(/\{(.+?)\}/,(_,w)=>blank?'<mark>_____</mark>':'<mark>'+w+'</mark>');
@@ -1167,7 +1176,7 @@ function grade(g){
   rec(cur.id,g===0?1:g===1?0.5:0);
   if(g===0){st.p[cur.id]={box:0,due:t};queue.splice(Math.min(3,queue.length),0,cur)}
   else if(g===1)st.p[cur.id]={box:Math.max(1,box),due:t+1};
-  else{const nb=Math.min(5,box+1);st.p[cur.id]={box:nb,due:t+INT[nb]}}
+  else{const nb=Math.min(5,box+1);st.p[cur.id]={box:nb,due:t+INT[nb]};if(box<2&&nb>=2)learnedNow()}
   if(st.m.last!==t){st.m.streak=st.m.last===t-1?st.m.streak+1:1;st.m.last=t}
   save();next();
 }
@@ -1197,7 +1206,7 @@ try{$('wText').value=localStorage.getItem('tdz-w')||''}catch(e){}
 $('wText').oninput=e=>{try{localStorage.setItem('tdz-w',e.target.value)}catch(_){}};
 $('wNew').onclick=wPick;
 $('reset').onclick=()=>{$('dlg').innerHTML=`<div class="dlg"><div><h3>Reset all progress?</h3><p>Every card goes back to new and grammar scores are cleared. This can't be undone.</p><div class="row"><button class="btn again" id="yes">Reset</button><button class="btn" id="no">Cancel</button></div></div></div>`;
-  $('no').onclick=()=>$('dlg').innerHTML='';$('yes').onclick=()=>{st.p={};st.g={};st.ws={};st.m={day:today(),nw:0,last:0,streak:0};save();$('dlg').innerHTML='';build();renderList();drawToc()}};
+  $('no').onclick=()=>$('dlg').innerHTML='';$('yes').onclick=()=>{st.p={};st.g={};st.ws={};st.act={};st.m={day:today(),nw:0,last:0,streak:0};save();$('dlg').innerHTML='';build();renderList();drawToc()}};
 
 /* ---- grammar ---- */
 let gi=0;
@@ -1400,13 +1409,39 @@ function renderWeak(){
   document.querySelectorAll('#wkBox [data-gi]').forEach(a=>a.onclick=()=>{gi=+a.dataset.gi;drawToc();drawG()});
 }
 
+/* ---- progress ---- */
+function renderProg(){
+  const t=today(),streak=st.m.last>=t-1?st.m.streak:0;
+  /* best streak and active days from the activity log */
+  const days=Object.keys(st.act).map(Number).filter(d=>st.act[d].a>0).sort((a,b)=>a-b);
+  let best=0,run=0,prev=null;for(const d of days){run=prev!==null&&d===prev+1?run+1:1;prev=d;if(run>best)best=run}
+  best=Math.max(best,streak);
+  const learned=ITEMS.filter(i=>st.p[i.id]&&st.p[i.id].box>=2).length,seen=ITEMS.filter(i=>st.p[i.id]).length;
+  const answers=days.reduce((a,d)=>a+st.act[d].a,0);
+  /* last 8 weeks, Monday-based (day 0 = Thursday 1 Jan 1970, so (d+3)%7 = 0 on Monday) */
+  const mon=t-((t+3)%7),weeks=[];
+  for(let k=7;k>=0;k--){const s=mon-7*k;let l=0,a=0,ad=0;for(let d=s;d<s+7;d++){const x=st.act[d];if(x){l+=x.l;a+=x.a;if(x.a)ad++}}weeks.push({s,l,a,ad})}
+  const maxL=Math.max(5,...weeks.map(w=>w.l));
+  const fmt=d=>new Date(d*864e5).toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'});
+  /* last 28 days strip */
+  const strip=[];for(let d=t-27;d<=t;d++){const x=st.act[d],on=x&&x.a>0;strip.push(`<i class="${on?'on':''}${d===t?' today':''}" title="${fmt(d)}: ${x?x.a:0} answers"></i>`)}
+  const lvRows=['B1','B2','C1','C2'].map(l=>{const all=ITEMS.filter(i=>i.lv===l),n=all.filter(i=>st.p[i.id]&&st.p[i.id].box>=2).length;return`<div class="b"><span>${l} <em>· ${all.length} items</em></span><span class="n">${n}/${all.length}</span><span class="t"><i style="width:${all.length?n/all.length*100:0}%"></i></span></div>`}).join('');
+  const gDone=G.filter((g,i)=>st.g[i]!=null&&st.g[i]>=g.q.length).length;
+  $('prBox').innerHTML=`<div class="stats pr"><div class="stat"><b>${streak}</b><span>day streak</span></div><div class="stat"><b>${best}</b><span>best streak</span></div><div class="stat"><b>${learned}</b><span>learned</span></div><div class="stat"><b>${days.length}</b><span>days practised</span></div></div>
+  <p class="hint">"Learned" means a card has reached box 2 (you got it right at least twice in a row). ${seen} of ${ITEMS.length} items started, ${answers} answers logged since this tracker was added.</p>
+  <h3>Last 28 days</h3><div class="strip" role="img" aria-label="Days practised in the last 28 days">${strip.join('')}</div>
+  <h3>Items learned per week</h3><div class="bars wkbars">${weeks.map((w,i)=>`<div class="b"><span>${i===7?'This week':'From '+fmt(w.s)} <em>· ${w.ad} day${w.ad===1?'':'s'} practised, ${w.a} answers</em></span><span class="n">${w.l}</span><span class="t"><i style="width:${w.l/maxL*100}%"></i></span></div>`).join('')}</div>
+  <h3>By level · learned</h3><div class="bars">${lvRows}</div>
+  <h3>Grammar</h3><p class="hint">${gDone} of ${G.length} topics drilled with a perfect score.</p>`;
+}
+
 /* ---- routing ---- */
-const views=['calis','dilbilgisi','telaffuz','test','liste','zayif','neden'];
+const views=['calis','dilbilgisi','telaffuz','test','liste','zayif','gelisim','neden'];
 function route(){
   const v=views.includes(location.hash.slice(1))?location.hash.slice(1):'calis';
   views.forEach(x=>$('v-'+x).hidden=x!==v);
   document.querySelectorAll('#nav a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
-  if(v==='calis'&&dirty.p)build();if(v==='test'&&(!qs.length||dirty.q))startQuiz();if(v==='liste')renderList();if(v==='zayif')renderWeak();if(v==='telaffuz'&&st.tp!=='golge')drawT();
+  if(v==='calis'&&dirty.p)build();if(v==='test'&&(!qs.length||dirty.q))startQuiz();if(v==='liste')renderList();if(v==='zayif')renderWeak();if(v==='gelisim')renderProg();if(v==='telaffuz'&&st.tp!=='golge')drawT();
 }
 window.addEventListener('hashchange',route);
 $('newMax').textContent=NEWMAX;

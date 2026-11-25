@@ -1,7 +1,7 @@
 // Offline support for Türkçe Derinlik.
 // The page is fetched network-first so updates arrive as soon as you're online;
 // everything else (icons, fonts) is served from the cache.
-const CACHE = 'derinlik-v2';
+const CACHE = 'derinlik-v3';
 const CORE = [
   './',
   'index.html',

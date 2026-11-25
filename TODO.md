@@ -14,7 +14,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
   - Added 10 topics (purpose, concession, "instead of", intensive adjectives, derivation suffixes, etmek/olmak/yapmak, aspect verbs, noun compounds, similes, word order), each with rules, 3 examples, a trap note and a 3-question drill. Now 32 topics; appended at the end so saved drill scores stay valid.
 - [x] Add a "weak spots" view showing which categories you miss most
   - New #zayif page (nav: "Zayıf · Weak spots"): miss rate by category and level, 15 hardest items with a "Practise these" button, grammar drills below full marks. Answers are recorded per item from now on (st.ws in localStorage; cleared by Reset). Tested in headless Chromium at phone width; only answers given after this update are counted.
-- [ ] Add a progress page: streak, items learned per week, level breakdown
+- [x] Add a progress page: streak, items learned per week, level breakdown
+  - New Gelişim tab: streak/best streak, 28-day strip, learned per week (8 weeks), level breakdown, grammar count. Uses a new per-day log (st.act) that starts from now, so older history is empty. Tested in headless Chromium at phone width, no console errors.
 - [ ] Add backup/restore of progress to a file, so you can move between phone and PC
 - [ ] Add a listening mode: hear a sentence and type what you heard
 - [ ] Add a reading section: short C1 texts with tap-to-translate words
