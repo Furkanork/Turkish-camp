@@ -8,7 +8,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
 
 - [x] Check all 463 items for mistakes: wrong translations, typos, wrong level labels
   - Read all 463 items + ran a script (field count, level labels, braces, duplicates: all clean). Fixed one non-standard item ("-ceği tutmak" → "canı çekmek"). Everything else looked correct; level labels judged reasonable.
-- [ ] Add about 150 more C1/C2 items, focusing on collocations and connectors
+- [x] Add about 150 more C1/C2 items, focusing on collocations and connectors
+  - Added 189 items (55 connectors, 47 clause structures, 87 collocations; mostly C1/C2, a few B2 for balance). Total now 652 (458 at C1–C2). Checked: no duplicates, all fields/braces valid, page script parses.
 - [ ] Add 10 more grammar topics with drills
 - [ ] Add a "weak spots" view showing which categories you miss most
 - [ ] Add a progress page: streak, items learned per week, level breakdown
