@@ -16,7 +16,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
   - New #zayif page (nav: "Zayıf · Weak spots"): miss rate by category and level, 15 hardest items with a "Practise these" button, grammar drills below full marks. Answers are recorded per item from now on (st.ws in localStorage; cleared by Reset). Tested in headless Chromium at phone width; only answers given after this update are counted.
 - [x] Add a progress page: streak, items learned per week, level breakdown
   - New Gelişim tab: streak/best streak, 28-day strip, learned per week (8 weeks), level breakdown, grammar count. Uses a new per-day log (st.act) that starts from now, so older history is empty. Tested in headless Chromium at phone width, no console errors.
-- [ ] Add backup/restore of progress to a file, so you can move between phone and PC
+- [x] Add backup/restore of progress to a file, so you can move between phone and PC
+  - Backup section at the bottom of the Gelişim tab: download JSON, restore with confirmation, invalid files rejected. Tested export → wipe → restore in headless Chromium.
 - [ ] Add a listening mode: hear a sentence and type what you heard
 - [ ] Add a reading section: short C1 texts with tap-to-translate words
 - [ ] Make the big index.html easier to maintain by moving items and grammar into separate files

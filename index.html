@@ -1432,7 +1432,26 @@ function renderProg(){
   <h3>Last 28 days</h3><div class="strip" role="img" aria-label="Days practised in the last 28 days">${strip.join('')}</div>
   <h3>Items learned per week</h3><div class="bars wkbars">${weeks.map((w,i)=>`<div class="b"><span>${i===7?'This week':'From '+fmt(w.s)} <em>· ${w.ad} day${w.ad===1?'':'s'} practised, ${w.a} answers</em></span><span class="n">${w.l}</span><span class="t"><i style="width:${w.l/maxL*100}%"></i></span></div>`).join('')}</div>
   <h3>By level · learned</h3><div class="bars">${lvRows}</div>
-  <h3>Grammar</h3><p class="hint">${gDone} of ${G.length} topics drilled with a perfect score.</p>`;
+  <h3>Grammar</h3><p class="hint">${gDone} of ${G.length} topics drilled with a perfect score.</p>
+  <h3>Yedek · Backup</h3><p class="hint">Move your progress between phone and PC: download a file here, then restore it on the other device. Restoring replaces the progress on the device you restore to.</p>
+  <div class="row"><button class="btn pri" id="bkOut">Download backup</button><label class="btn" for="bkIn" style="cursor:pointer">Restore from file…</label><input type="file" id="bkIn" accept=".json,application/json" hidden></div><p class="hint" id="bkMsg" role="status"></p>`;
+  $('bkOut').onclick=()=>{
+    const data={app:'turkish-camp',v:1,saved:new Date().toISOString(),st,words:(()=>{try{return localStorage.getItem('tdz-w')||''}catch(e){return''}})()};
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));
+    a.download='turkish-camp-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1e3);
+    $('bkMsg').textContent='Backup downloaded ('+Object.keys(st.p).length+' cards started).';
+  };
+  $('bkIn').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    f.text().then(t=>{
+      let d;try{d=JSON.parse(t)}catch(_){d=null}
+      const s2=d&&d.app==='turkish-camp'&&d.st;
+      if(!s2||typeof s2.p!=='object'||typeof s2.m!=='object'||Array.isArray(s2.p)){$('bkMsg').textContent='That file is not a Turkish Camp backup. Nothing was changed.';return}
+      $('dlg').innerHTML=`<div class="dlg"><div><h3>Restore this backup?</h3><p>It has ${Object.keys(s2.p).length} cards started${d.saved?', saved '+esc(String(d.saved).slice(0,10)):''}. Your current progress on this device will be replaced.</p><div class="row"><button class="btn again" id="bkYes">Restore</button><button class="btn" id="bkNo">Cancel</button></div></div></div>`;
+      $('bkNo').onclick=()=>{$('dlg').innerHTML='';e.target.value=''};
+      $('bkYes').onclick=()=>{try{localStorage.setItem('tdz',JSON.stringify(s2));if(typeof d.words==='string')localStorage.setItem('tdz-w',d.words)}catch(_){$('dlg').innerHTML='';$('bkMsg').textContent='Could not write to this browser\'s storage.';return}location.reload()};
+    }).catch(()=>{$('bkMsg').textContent='Could not read that file.'});
+  };
 }
 
 /* ---- routing ---- */
