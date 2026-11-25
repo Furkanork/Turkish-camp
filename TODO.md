@@ -20,7 +20,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
   - Backup section at the bottom of the Gelişim tab: download JSON, restore with confirmation, invalid files rejected. Tested export → wipe → restore in headless Chromium.
 - [x] Add a listening mode: hear a sentence and type what you heard
   - New Dinle tab: speaks an example sentence (play / slow), type it, word-diff feedback, show-answer option; misses feed Weak spots and the activity log. Tested in headless Chromium (speech mocked); needs a Turkish voice on the real device.
-- [ ] Add a reading section: short C1 texts with tap-to-translate words
+- [x] Add a reading section: short C1 texts with tap-to-translate words
+  - New Oku tab with 5 original texts (~20 tappable words each), whole-text translation toggle, read-aloud. Glosses are hand-written by Claude: worth a native read-through. More texts can be added to the READ array.
 - [ ] Make the big index.html easier to maintain by moving items and grammar into separate files
 - [ ] Test on a phone-sized screen and fix layout problems
 
