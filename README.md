@@ -27,19 +27,26 @@ A single-page study site for heritage speakers of Turkish who want to move from 
 
 Progress is stored in the browser's `localStorage`; nothing is sent anywhere.
 
+## Files
+- `index.html`: the interface and logic
+- `data/items.js`: the practice items (`RAW`, one per line) and categories (`CATS`)
+- `data/grammar.js`: the grammar topics (`G`)
+- `data/reading.js`: the reading texts (`READ`)
+- `sw.js`: offline cache (bump `CACHE` when files change)
+
 ## Run locally
 
-It's a single static file with no build step: open `index.html` in a browser.
+There is no build step. Open `index.html` in a browser (it loads the three files in `data/` next to it).
 
 ## Adding items
 
-Items live in the `RAW` object in `index.html`, one per line:
+Items live in the `RAW` object in `data/items.js`, one per line:
 
 ```
 term|English meaning|Example sentence with the {target form} in braces|B2
 ```
 
-Grammar topics are in the `G` array.
+Grammar topics are in the `G` array in `data/grammar.js`.
 
 ## Install on your phone
 
