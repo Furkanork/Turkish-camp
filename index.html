@@ -107,7 +107,7 @@ textarea{min-height:130px;resize:vertical}
 .bars .t{grid-column:1/-1;height:8px;border-radius:4px;background:var(--ln);overflow:hidden}.bars .t i{display:block;height:100%;background:var(--tq)}
 .wd{padding:1px 4px;border-radius:4px}.wd.ok{background:rgba(60,150,90,.18)}.wd.near{background:rgba(220,150,40,.25)}.wd.bad{background:rgba(190,70,55,.25)}
 .rdtext{margin:12px 0}.rdp{font-size:18px;line-height:1.9;margin:0 0 14px}.rw{font:inherit;color:inherit;background:rgba(60,150,150,.13);border:0;border-bottom:2px solid var(--tq);border-radius:4px;padding:0 3px;cursor:pointer}.rw.on{background:var(--tq);color:#fff}.rdgloss{min-height:3em;padding:10px 12px;margin:10px 0;border:1px dashed var(--ln);border-radius:8px;font-size:16px}.rdtr{color:var(--mut);margin-top:12px;line-height:1.6}
-.stats.pr{margin:14px 0}.strip{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin:8px 0 18px;max-width:420px}.strip i{aspect-ratio:1;border-radius:4px;background:var(--ln)}.strip i.on{background:var(--tq)}.strip i.today{outline:2px solid var(--mut);outline-offset:1px}
+.stats.pr{margin:14px 0;gap:14px 26px}.stats.pr .stat b{color:var(--ink,inherit)}.stats.pr .stat span{color:var(--mut)}.strip{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin:8px 0 18px;max-width:420px}.strip i{aspect-ratio:1;border-radius:4px;background:var(--ln)}.strip i.on{background:var(--tq)}.strip i.today{outline:2px solid var(--mut);outline-offset:1px}
 .bars .n{text-align:right;font-variant-numeric:tabular-nums}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
 .opt{min-height:52px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);cursor:pointer;font-size:16px}
@@ -721,6 +721,7 @@ function route(){
   const v=views.includes(location.hash.slice(1))?location.hash.slice(1):'calis';
   views.forEach(x=>$('v-'+x).hidden=x!==v);
   document.querySelectorAll('#nav a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  {const cur=document.querySelector('#nav a[aria-current]');if(cur&&cur.scrollIntoView)try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
   if(v==='calis'&&dirty.p)build();if(v==='test'&&(!qs.length||dirty.q))startQuiz();if(v==='liste')renderList();if(v==='zayif')renderWeak();if(v==='gelisim')renderProg();if(v==='dinle')startListen();if(v==='oku')renderRead();if(v==='telaffuz'&&st.tp!=='golge')drawT();
 }
 window.addEventListener('hashchange',route);

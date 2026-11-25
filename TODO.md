@@ -24,7 +24,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
   - New Oku tab with 5 original texts (~20 tappable words each), whole-text translation toggle, read-aloud. Glosses are hand-written by Claude: worth a native read-through. More texts can be added to the READ array.
 - [x] Make the big index.html easier to maintain by moving items and grammar into separate files
   - Moved to data/items.js (RAW+CATS), data/grammar.js (G), data/reading.js (READ). index.html 151 KB → 73 KB. Content identical (652 items, 32 topics); service worker caches them. All earlier headless tests re-run OK.
-- [ ] Test on a phone-sized screen and fix layout problems
+- [x] Test on a phone-sized screen and fix layout problems
+  - Checked all 10 tabs at 320/360/390 px in headless Chromium (touch emulation): no horizontal overflow, no tap targets under 32px. Fixed: unreadable stat labels on the Progress tab (low contrast), and the tab bar now scrolls the active tab into view (it has 10 tabs and the current one could be off-screen). Not tested on a real device.
 
 ## Questions for you
 
