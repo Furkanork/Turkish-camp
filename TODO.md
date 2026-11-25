@@ -18,7 +18,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
   - New Gelişim tab: streak/best streak, 28-day strip, learned per week (8 weeks), level breakdown, grammar count. Uses a new per-day log (st.act) that starts from now, so older history is empty. Tested in headless Chromium at phone width, no console errors.
 - [x] Add backup/restore of progress to a file, so you can move between phone and PC
   - Backup section at the bottom of the Gelişim tab: download JSON, restore with confirmation, invalid files rejected. Tested export → wipe → restore in headless Chromium.
-- [ ] Add a listening mode: hear a sentence and type what you heard
+- [x] Add a listening mode: hear a sentence and type what you heard
+  - New Dinle tab: speaks an example sentence (play / slow), type it, word-diff feedback, show-answer option; misses feed Weak spots and the activity log. Tested in headless Chromium (speech mocked); needs a Turkish voice on the real device.
 - [ ] Add a reading section: short C1 texts with tap-to-translate words
 - [ ] Make the big index.html easier to maintain by moving items and grammar into separate files
 - [ ] Test on a phone-sized screen and fix layout problems

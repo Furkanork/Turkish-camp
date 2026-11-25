@@ -18,6 +18,7 @@ A single-page study site for heritage speakers of Turkish who want to move from 
   - Atasözleri: proverbs
 - **Dilbilgisi (Grammar):** 32 B2–C2 topics, each with the rule, examples, a common-mistake note and a drill.
 - **Telaffuz (Accent):** for an Istanbul accent, aimed at Dutch and English speakers: 10 sound guides with playable words and minimal pairs (stress, full vowels, tapped r, ı, ü/ö, pure vowels, ğ, light/dark l, â, intonation), a word-stress trainer, shadowing with microphone recording and a speech-recognition clarity check (Chrome/Edge), and everyday Istanbul spoken forms.
+- **Dinle (Listen):** the browser speaks an example sentence in Turkish (normal or slow); you type what you heard and see a word-by-word diff (green right, orange one letter off, red missed). Misses count toward Weak spots. Needs a Turkish voice (Chrome/Edge).
 - **Test:** fill-in-the-gap quiz, typed or multiple choice; missed items go back into today's reviews.
 - **Zayıf (Weak spots):** built from your own answers (cards graded Tekrar/Zor and missed quiz questions): miss rate by category and level, your 15 hardest items with a one-tap "Practise these" button, and grammar drills that are not yet perfect.
 - **Gelişim (Progress):** day streak and best streak, a 28-day practice strip, items learned per week (last 8 weeks) and a level breakdown. Built from a per-day activity log kept in `localStorage` (starts logging from this version).
