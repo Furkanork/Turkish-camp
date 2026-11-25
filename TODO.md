@@ -6,7 +6,8 @@ Its work goes to the `claude/auto-work` branch. Nothing changes on the live site
 
 ## Tasks
 
-- [ ] Check all 463 items for mistakes: wrong translations, typos, wrong level labels
+- [x] Check all 463 items for mistakes: wrong translations, typos, wrong level labels
+  - Read all 463 items + ran a script (field count, level labels, braces, duplicates: all clean). Fixed one non-standard item ("-ceği tutmak" → "canı çekmek"). Everything else looked correct; level labels judged reasonable.
 - [ ] Add about 150 more C1/C2 items, focusing on collocations and connectors
 - [ ] Add 10 more grammar topics with drills
 - [ ] Add a "weak spots" view showing which categories you miss most
